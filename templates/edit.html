@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+	<script type="text/javascript" src = "{{url_for('static',filename = 'js/script.js')}}"></script>
+
+	<title>{{post['tittle']}}</title>
+</head>
+<body>
+	<section class="text-gray-700 body-font relative">
+		<div class="container px-5 py-24 mx-auto">
+		  <div class="flex flex-col text-center w-full mb-12">
+			<h1 class="sm:text-3x3 text-2xl font-medium title-font mb-8 text-gray-900" id = 'name'>Edit {{post['tittle']}}</h1>
+			<p class="lg:w-3/10 mx-auto leading-relaxed text-base">Slug : {{post['slug']}}</p>
+		  </div>
+		  <div class="md:w-1/2 md:w-2/3 mx-auto">
+			<div class="flex flex-wrap -m-10">
+			  <div class="p-3 w-1/2">
+				<input class="w-full bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2"  id = "tittle"value = '{{post["tittle"]}}' name = "tittle" id = "tittle" type="text">
+			  </div>
+			  <div class="p-3 w-1/2">
+				<input class="w-full bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2" id = "tagline" value = '{{post["tagline"]}}' type="text">
+			  </div>
+			  <div class="p-3 w-full">
+				<textarea class="w-full bg-gray-100 rounded border border-gray-400 focus:outline-none h-48 focus:border-indigo-500 text-base px-4 py-2 resize-none block" id = "content">{{post['content']}}</textarea>
+			  </div>
+			  <div class="p-3 w-full">
+				<button onclick = "post('{{post['slug']}}')" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Edit</button>
+			  </div>
+			 
+	  </section>
+</body>
+</html>
+
+
+
+
+
+
+
+
