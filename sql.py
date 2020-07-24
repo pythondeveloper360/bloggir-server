@@ -179,6 +179,6 @@ def db_create():
         cursor.execute(sqlquery)
         db.commit()
     except:
-        cursor.rollback()
+        db.rollback()
 
 db_create()
