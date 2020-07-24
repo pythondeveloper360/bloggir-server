@@ -171,10 +171,14 @@ def checkuser(email):
         return False
 
 def db_create():
-    sqlquery = "create table if not exists post('Id','Tittle','Tagline','Content','Slug','Date','author','authorusername')"
-    cursor.execute(sqlquery)
-    db.commit()
-    sqlquery = "create table if not exists users('name','email','username','password')"
-    cursor.execute(sqlquery)
-    db.commit()
+    try:
+        sqlquery = "create table post('Id','Tittle','Tagline','Content','Slug','Date','author','authorusername')"
+        cursor.execute(sqlquery)
+        db.commit()
+        sqlquery = "create table users('name','email','username','password')"
+        cursor.execute(sqlquery)
+        db.commit()
+    except:
+        pass
+        
 db_create()
