@@ -61,7 +61,7 @@ def readAllPosts():
 
 
 def insertPost(tittle, tagline, content, slug, date, author, authorusername):
-    sqlquery = "INSERT INTO post (tittle,tagline,content,slug,date,author,authorusername) values ('{}','{}','{}','{}','{}','{}','{}') ".format(
+    sqlquery = "INSERT INTO post (tittle,tagline,content,slug,date,author,authorusername) values ('{}','{}','{}','{}','{}','{}','{}'); ".format(
         tittle, tagline, content, slug, date, author, authorusername)
     cursor.execute(sqlquery)
     db.commit()
@@ -77,7 +77,7 @@ def readPostBySlug(slug):
 
 def slugs():
     array = []
-    sqlquery = "SELECT slug from post"
+    sqlquery = "SELECT slug from post;"
     cursor.execute(sqlquery)
     data = cursor.fetchall()
     for i in range(len(data)):
@@ -119,7 +119,7 @@ def updatePost(tittle, tagline, content, slug, date):
 
 
 def insertMessage(name, email, msg):
-    sqlquery = "INSERT into msg(name,email,msg) values('{}','{}','{}')".format(
+    sqlquery = "INSERT into msg(name,email,msg) values('{}','{}','{}');".format(
         name, email, msg)
     cursor.execute(sqlquery)
     db.commit()
@@ -127,7 +127,7 @@ def insertMessage(name, email, msg):
 
 def readAllMsg():
     array = []
-    sqlquery = "SELECT * FROM msg"
+    sqlquery = "SELECT * FROM msg;"
     cursor.execute(sqlquery)
     result = cursor.fetchall()
     for i in range(len(result)):
@@ -147,21 +147,20 @@ def authenticateuser(user, password):
         user, password)
     cursor.execute(sqlquery)
     result = cursor.fetchone()
-    return result
-    # if result:
-    #     return user
-    # else:
-    #     return None
+    if result:
+        return user
+    else:
+        return None
 
 
 def signUpUser(name, email, username, password):
-    sqlquery = "insert into users (name,email,username,password) values('{}','{}','{}','{}')".format(
+    sqlquery = "insert into users (name,email,username,password) values('{}','{}','{}','{}');".format(
         name, email, username, password)
     cursor.execute(sqlquery)
     db.commit()
 def checkuser(email):
     array = []
-    sqlquery = "SELECT email from users"
+    sqlquery = "SELECT email from users;"
     cursor.execute(sqlquery)
     data = cursor.fetchall()
     for i in range(len(data)):
@@ -170,16 +169,3 @@ def checkuser(email):
         return True
     else:
         return False
-
-def db_create():
-    try:
-        sqlquery = "create table post('Id','Tittle','Tagline','Content','Slug','Date','author','authorusername')"
-        cursor.execute(sqlquery)
-        db.commit()
-        sqlquery = "create table users('name','email','username','password')"
-        cursor.execute(sqlquery)
-        db.commit()
-    except:
-        db.rollback()
-
-db_create()
