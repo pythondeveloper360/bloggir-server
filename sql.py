@@ -22,6 +22,7 @@ cursor = db.cursor()
     author : name
     author : username
 
+ id,tittle,tagline,content,slug,date,author,authorusername
 """
 """
     
@@ -37,7 +38,7 @@ cursor = db.cursor()
 
 def readAllPostsWithLimit(limit):
     array = []
-    sqlquery = "SELECT * FROM post limit  '{}'".format(limit)
+    sqlquery = "SELECT * FROM post limit  '{}';".format(limit)
     cursor.execute(sqlquery)
     data = cursor.fetchall()
     # print(data)
@@ -67,7 +68,7 @@ def insertPost(tittle, tagline, content, slug, date, author, authorusername):
 
 
 def readPostBySlug(slug):
-    sqlquery = "SELECT * FROM post where slug = '{}'".format(slug)
+    sqlquery = "SELECT * FROM post where slug = '{}';".format(slug)
     cursor.execute(sqlquery)
     data = cursor.fetchone()
     return dict(id=data[0], tittle=data[1], tagline=data[2], content=data
@@ -87,7 +88,7 @@ def slugs():
 
 def readAllPostsByAuthor(authorusername):
     array = []
-    sqlquery = "SELECT * FROM post where authorusername = '{}'".format(
+    sqlquery = "SELECT * FROM post where authorusername = '{}';".format(
         authorusername)
     cursor.execute(sqlquery)
     data = cursor.fetchall()
@@ -98,20 +99,20 @@ def readAllPostsByAuthor(authorusername):
 
 
 def getAuthorUserName(slug):
-    sqlquery = "SELECT authorusername from post where slug = '{}'".format(slug)
+    sqlquery = "SELECT authorusername from post where slug = '{}';".format(slug)
     cursor.execute(sqlquery)
     data = cursor.fetchone()[0]
     return data if data else "no user"
 
 
 def deletePost(slug):
-    sqlquery = "DELETE FROM post WHERE slug = '{}'".format(slug)
+    sqlquery = "DELETE FROM post WHERE slug = '{}';".format(slug)
     cursor.execute(sqlquery)
     db.commit()
 
 
 def updatePost(tittle, tagline, content, slug, date):
-    sqlquery = "UPDATE post set tittle = '{}', tagline = '{}', content = '{}', date = '{}' WHERE slug = '{}'".format(
+    sqlquery = "UPDATE post set tittle = '{}', tagline = '{}', content = '{}', date = '{}' WHERE slug = '{}';".format(
         tittle, tagline, content, date,slug)
     cursor.execute(sqlquery)
     db.commit()
@@ -136,13 +137,13 @@ def readAllMsg():
 
 
 def deleteMsg(id):
-    sqlquery = "delete from msg where id = '{}'".format(id)
+    sqlquery = "delete from msg where id = '{}';".format(id)
     db.execute(sqlquery)
     db.commit()
 
 
 def authenticateuser(user, password):
-    sqlquery = "SELECT * FROM users where username = '{}' AND password = '{}'".format(
+    sqlquery = "SELECT * FROM users where username = '{}' AND password = '{}';".format(
         user, password)
     cursor.execute(sqlquery)
     result = cursor.fetchone()
