@@ -1,0 +1,23 @@
+*{
+  font-family: Consolas, monaco, monospace;
+  font-size: 20px;
+}
+#content:focus{
+  border: 1px solid black;
+}
+#content{
+  border:1px solid black;
+  height: 400px;
+  overflow-y: scroll;  
+}
+#post{
+position: relative;
+float: right;
+right: 10px;
+}
+#div{
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+
+}

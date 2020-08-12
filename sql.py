@@ -4,11 +4,11 @@ import os
 
 
 # db = sqlite3.connect("db.sqlite3", check_same_thread=False)
-db = psycopg2.connect(user = str(os.getenv('username')),
-                                  password = str(os.getenv('password')),
-                                  host = str(os.getenv('host')),
-                                  port = str(os.getenv('port')),
-                                  database = str(os.getenv('database')))
+db = psycopg2.connect(user=str(os.getenv('username')),
+                      password=str(os.getenv('password')),
+                      host=str(os.getenv('host')),
+                      port=str(os.getenv('port')),
+                      database=str(os.getenv('database')))
 cursor = db.cursor()
 
 """"
@@ -86,7 +86,6 @@ def slugs():
     return array
 
 
-
 def readAllPostsByAuthor(authorusername):
     array = []
     sqlquery = "SELECT * FROM post where authorusername = '{}';".format(
@@ -100,10 +99,21 @@ def readAllPostsByAuthor(authorusername):
 
 
 def getAuthorUserName(slug):
-    sqlquery = "SELECT authorusername from post where slug = '{}';".format(slug)
+    sqlquery = "SELECT authorusername from post where slug = '{}';".format(
+        slug)
     cursor.execute(sqlquery)
     data = cursor.fetchone()[0]
     return data if data else "no user"
+
+
+def getNameFromUserName(username):
+    sqlquery = 'select name from users where username = "{}"'.format(username)
+    cursor.execute(sqlquery)
+    data = cursor.fetchone()
+    if data:
+        return data[0]
+    else:
+        return False
 
 
 def deletePost(slug):
@@ -114,7 +124,7 @@ def deletePost(slug):
 
 def updatePost(tittle, tagline, content, slug, date):
     sqlquery = "UPDATE post set tittle = '{}', tagline = '{}', content = '{}', date = '{}' WHERE slug = '{}';".format(
-        tittle, tagline, content, date,slug)
+        tittle, tagline, content, date, slug)
     cursor.execute(sqlquery)
     db.commit()
 
@@ -159,6 +169,8 @@ def signUpUser(name, email, username, password):
         name, email, username, password)
     cursor.execute(sqlquery)
     db.commit()
+
+
 def checkuser(email):
     array = []
     sqlquery = "SELECT email from users;"

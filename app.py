@@ -12,31 +12,36 @@ config = json.load(config)
 
 @app.route("/")
 def home():
-    return render_template("index.html", posts=sql.readAllPostsWithLimit(config["posts"]),year = datetime.now().year,tittle = 'Bloggir')
-
+    return render_template("index.html", posts=sql.readAllPostsWithLimit(config["posts"]), year=datetime.now().year, tittle='Bloggir')
 
 
 @app.route("/post")
 def post():
-    return render_template("post.html", posts=sql.readAllPosts(), le = len(sql.readAllPosts()),year = datetime.now().year,tittle = 'All Posts in Bloggir')
+    return render_template("post.html", posts=sql.readAllPosts(), le=len(sql.readAllPosts()), year=datetime.now().year, tittle='All Posts in Bloggir')
 
 
 @app.route("/post/<slug>")
 def postview(slug):
     if slug in sql.slugs():
-        return render_template("postview.html", post=sql.readPostBySlug(slug),year = datetime.now().year,tittle = sql.readPostBySlug(slug)["tittle"])
+        return render_template("postview.html", post=sql.readPostBySlug(slug), year=datetime.now().year, tittle=sql.readPostBySlug(slug)["tittle"])
     else:
         abort(404)
 
 
-@app.route("/edit/new-post")
+@app.route("/edit/new-post", methods=['GET''POST'])
 def newpost():
-    return render_template
+    if 'login' in session:
+        if request.method == 'POST'
+        data = request.get_json()
+        name = sql.getNameFromUserName(session['login'])
+        sql.insertPost(data['tittle'], data['tagline'], data['content'], data['slug'],
+                       date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
+
 
 @app.route("/cp")
 def cp():
     if "login" in session:
-        return render_template("cp.html", posts=sql.readAllPostsByAuthor(session["login"]),year = datetime.now().year,tittle = 'Control Pannel')
+        return render_template("cp.html", posts=sql.readAllPostsByAuthor(session["login"]), year=datetime.now().year, tittle='Control Pannel')
     else:
         return redirect("/cplogin")
 
@@ -49,7 +54,7 @@ def cplogin():
         if sql.authenticateuser(uname, password):
             session["login"] = uname
             return redirect("/cp")
-    return render_template("cplogin.html",tittle = 'Login to Bloggir')
+    return render_template("cplogin.html", tittle='Login to Bloggir')
 
 
 @app.route("/update/<slug>", methods=["POST"])
@@ -58,7 +63,7 @@ def update(slug):
         if request.method == "POST":
             rdata = request.get_json()
             sql.updatePost(tittle=rdata["tittle"], tagline=rdata['tagline'],
-                           content=rdata['content'], slug=slug, date=date.today())
+                           content=rdata['content'], slug=slug, date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}')
             print(rdata)
             return jsonify("sucess")
     else:
@@ -68,7 +73,7 @@ def update(slug):
 @app.route("/edit/<slug>")
 def editpost(slug):
     if session["login"] == sql.getAuthorUserName(slug):
-        return render_template("edit.html", post=sql.readPostBySlug(slug),tittle = f"Edit {sql.readPostBySlug(slug)['tittle']}")
+        return render_template("edit.html", post=sql.readPostBySlug(slug), tittle=f"Edit {sql.readPostBySlug(slug)['tittle']}")
     else:
         return redirect("/cplogin")
 
@@ -93,14 +98,15 @@ def signup():
         if (sql.checkuser(email)) == False:
             if len(password) < 10:
                 flash("Password must be longer than 10 characters")
-                return render_template('signup.html',tittle = 'SignUp for Bloggir')
-            sql.signUpUser(name,email,uname, password)
+                return render_template('signup.html', tittle='SignUp for Bloggir')
+            sql.signUpUser(name, email, uname, password)
             return redirect("/cplogin")
         else:
             flash("User exists")
             return render_template("signup.html")
-        
-    return render_template("signup.html",tittle = 'SignUp for Bloggir')
+
+    return render_template("signup.html", tittle='SignUp for Bloggir')
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

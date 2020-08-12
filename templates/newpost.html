@@ -4,27 +4,32 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css'}}" />
-	<title>{{post['tittle']}}</title>
+    <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
+    <title>New Post</title>
 </head>
 <body>
 <div id = 'div'>
 <form action="">
 	<label for="tittle">Tittle</label>
 	
-	<input type="text" name="tittle" value = "{{post['tittle']}}" id="tittle">
+	<input type="text" name="tittle" id="tittle">
+    
+    <label for="slug">Slug</label>
+	
+	<input type="slug" name="slug" id="slug">
 	
 	<label for="tagline">Tagline</label>
 	
-	<input type="text" name="tagline"  value = "{{post['tagline']}}" id="tagline">
+	<input type="text" name="tagline" id="tagline">
 	<br>
 	<br>
 	<label for="content">Content</label>
-	<div name = 'content' id  = 'content' contenteditable="true">{{post['content']}}</div>
+	<div name = 'content' id  = 'content' contenteditable="true"></div>
 
 </form>	
 </div>
 <br>
-<button id = 'post' onclick="post(`{{post['slug']}}`)">Post</button>
+<button id = 'post'>Add Post</button>
 </body>
 </html>
 
