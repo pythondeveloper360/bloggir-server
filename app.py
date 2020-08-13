@@ -31,11 +31,11 @@ def postview(slug):
 @app.route("/edit/new-post", methods=['GET''POST'])
 def newpost():
     if 'login' in session:
-        if request.method == 'POST'
-        data = request.get_json()
-        name = sql.getNameFromUserName(session['login'])
-        sql.insertPost(data['tittle'], data['tagline'], data['content'], data['slug'],
-                       date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
+        if request.method == 'POST':
+            data = request.get_json()
+            name = sql.getNameFromUserName(session['login'])
+            sql.insertPost(data['tittle'], data['tagline'], data['content'], data['slug'],
+                        date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
 
 
 @app.route("/cp")
