@@ -4,14 +4,14 @@ function deletePost(slug){
         $(`#${slug}`).remove();
         var xhr =   new XMLHttpRequest();
         xhr.open("POST","/delete/" + slug ,true);
-        xhr.send();
+
         
 }
 }
 function post(slug){
-    var tittle = document.getElementById("tittle").value
-    var tagline = document.getElementById("tagline").value
-    var content = document.getElementById("content").value
+    var tittle = document.getElementById("tittle").value;
+    var tagline = document.getElementById("tagline").value;
+    var content = document.getElementById("content").innerHTML;
     
     var xhr = new XMLHttpRequest();
     xhr.open("POST","/update/" + slug,true);
@@ -21,10 +21,7 @@ function post(slug){
     "tagline":tagline,
     "content":content
     }));
-    if (s){
-        document.getElementById("name").innerHTML = ` <h2> ${tittle} </h2>`
-    }
-
+    
 
 }
 
@@ -34,8 +31,8 @@ function newpost(){
     var slug = document.getElementById("slug").value;
     var content = document.getElementById("content").innerHTML;
     
-    var xhr = XMLHttpRequest()
-    xhr.open('POST','/edit/new-post',true);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST','/new-post',true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     var r = xhr.send(JSON.stringify(
     {
@@ -45,13 +42,22 @@ function newpost(){
         'content' : content 
     }    
     ))
-    if (r){
-        
-    window.location.replace('/cp');
-    }
+}
+
+function login(){
+    var uname = document.getElementById('uname');
+    var password = document.getElementById('pass');
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST',"/login",true)
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    var r = xhr.send(JSON.stringify(
+    {
+        'uname': uname,
+        'password' : password 
+    }    
+    ))
 
 
-
-
+    
 
 }

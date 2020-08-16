@@ -4,11 +4,19 @@ import os
 
 
 # db = sqlite3.connect("db.sqlite3", check_same_thread=False)
-db = psycopg2.connect(user=str(os.getenv('username')),
-                      password=str(os.getenv('password')),
-                      host=str(os.getenv('host')),
-                      port=str(os.getenv('port')),
-                      database=str(os.getenv('database')))
+# db = psycopg2.connect(user=str(os.getenv('username')),
+#                       password=str(os.getenv('password')),
+#                       host=str(os.getenv('host')),
+#                       port=str(os.getenv('port')),
+#                       database=str(os.getenv('database')))
+db = psycopg2.connect(
+    user = 'xubuuanpszwwcx',
+    password = '3e2b69885d81e646182281d1cfb60ed02a6a584d24b62ba81f4734f1ed8c5e2c',
+    host = 'ec2-54-197-254-117.compute-1.amazonaws.com',
+    port = '5432',
+    database = 'dffngl3u0qkkld'
+)
+
 cursor = db.cursor()
 
 """"
@@ -37,16 +45,6 @@ cursor = db.cursor()
 """
 
 
-def readAllPostsWithLimit(limit):
-    array = []
-    sqlquery = "SELECT * FROM post limit  '{}';".format(limit)
-    cursor.execute(sqlquery)
-    data = cursor.fetchall()
-    # print(data)
-    for i in range(len(data)):
-        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], content=data[i]
-                          [3], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
-    return array
 
 
 def readAllPosts():
@@ -69,7 +67,7 @@ def insertPost(tittle, tagline, content, slug, date, author, authorusername):
 
 
 def readPostBySlug(slug):
-    sqlquery = "SELECT * FROM post where slug = '{}';".format(slug)
+    sqlquery = """SELECT * FROM post where "slug" = '{}';""".format(slug)
     cursor.execute(sqlquery)
     data = cursor.fetchone()
     return dict(id=data[0], tittle=data[1], tagline=data[2], content=data
@@ -88,7 +86,7 @@ def slugs():
 
 def readAllPostsByAuthor(authorusername):
     array = []
-    sqlquery = "SELECT * FROM post where authorusername = '{}';".format(
+    sqlquery = """SELECT * FROM post where "authorusername" = '{}';""".format(
         authorusername)
     cursor.execute(sqlquery)
     data = cursor.fetchall()
@@ -99,15 +97,15 @@ def readAllPostsByAuthor(authorusername):
 
 
 def getAuthorUserName(slug):
-    sqlquery = "SELECT authorusername from post where slug = '{}';".format(
+    sqlquery = """SELECT authorusername from post where "slug" = '{}';""".format(
         slug)
     cursor.execute(sqlquery)
-    data = cursor.fetchone()[0]
+    data = cursor.fetchone()
     return data if data else "no user"
 
 
 def getNameFromUserName(username):
-    sqlquery = 'select name from users where username = "{}"'.format(username)
+    sqlquery = '''select name from "users" where "username" = '{}';'''.format(username)
     cursor.execute(sqlquery)
     data = cursor.fetchone()
     if data:
@@ -117,13 +115,13 @@ def getNameFromUserName(username):
 
 
 def deletePost(slug):
-    sqlquery = "DELETE FROM post WHERE slug = '{}';".format(slug)
+    sqlquery = """DELETE FROM post WHERE "slug" = '{}';""".format(slug)
     cursor.execute(sqlquery)
     db.commit()
 
 
 def updatePost(tittle, tagline, content, slug, date):
-    sqlquery = "UPDATE post set tittle = '{}', tagline = '{}', content = '{}', date = '{}' WHERE slug = '{}';".format(
+    sqlquery = """UPDATE post set tittle = '{}', tagline = '{}', content = '{}', date = '{}' WHERE slug = '{}';""".format(
         tittle, tagline, content, date, slug)
     cursor.execute(sqlquery)
     db.commit()
@@ -148,13 +146,13 @@ def readAllMsg():
 
 
 def deleteMsg(id):
-    sqlquery = "delete from msg where id = '{}';".format(id)
+    sqlquery = """delete from msg where "id" = '{}';""".format(id)
     db.execute(sqlquery)
     db.commit()
 
 
 def authenticateuser(user, password):
-    sqlquery = "SELECT * FROM users where username = '{}' AND password = '{}';".format(
+    sqlquery = """SELECT * FROM users where "username" = '{}' AND "password" = '{}';""".format(
         user, password)
     cursor.execute(sqlquery)
     result = cursor.fetchone()
@@ -173,7 +171,7 @@ def signUpUser(name, email, username, password):
 
 def checkuser(email):
     array = []
-    sqlquery = "SELECT email from users;"
+    sqlquery = """SELECT "email" from users;"""
     cursor.execute(sqlquery)
     data = cursor.fetchall()
     for i in range(len(data)):

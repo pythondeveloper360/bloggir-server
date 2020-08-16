@@ -18,15 +18,17 @@
     <!-- Custom styles for this template -->
     <link href="https://getbootstrap.com/docs/4.0/examples/sign-in/signin.css" rel="stylesheet">
   </head>
-
+  {% for message in get_flashed_messages() %}
+  <script>alert('{{message}}')</script>  
+  {% endfor %}
   <body class="text-center">
     <form class="form-signin" action="/cplogin" method="post">
       <img class="mb-4" src="{{url_for('static',filename = 'img/login.png')}}" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="text" id="inputEmail" class="form-control" name = "uname" placeholder="Email address" required autofocus>
+      <input type="text" id="uname" class="form-control" name = "uname" placeholder="Email address" required autofocus>
       <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" name = "pass" placeholder="Password" required>
+      <input type="password" id="pass" class="form-control" name = "pass" placeholder="Password" required>
 
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     </form>
