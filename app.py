@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, abort, session, flash, redirect, jsonify,url_for,Markup
+from flask import Flask, render_template, request, abort, session, flash, redirect, jsonify, url_for, Markup
 import sql
 import json
 from datetime import datetime
@@ -23,19 +23,27 @@ def post():
 @app.route("/post/<slug>")
 def postview(slug):
     if slug in sql.slugs():
-        return render_template("postview.html", post=sql.readPostBySlug(slug),content = Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, tittle=sql.readPostBySlug(slug)["tittle"])
+        return render_template("postview.html", post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, tittle=sql.readPostBySlug(slug)["tittle"])
     else:
         abort(404)
 
 
-@app.route("/newpost", methods=['GET','POST'])
+@app.route('/mypost')
+def mypost():
+    if 'login' in session:
+        return render_template("post.html", posts=sql.readAllPostsByAuthor(session['login']), le=len(sql.readAllPostsByAuthor(session['login'])), year=datetime.now().year, tittle="All Posts by {}".format(sql.getNameFromUserName(session['login'])))
+    else:
+        return redirect('/cplogin?redirect=mypost')
+
+
+@app.route("/newpost", methods=['GET', 'POST'])
 def new_post():
     if 'login' in session:
         if request.method == 'POST':
             data = request.get_json()
             name = sql.getNameFromUserName(session['login'])
             sql.insertPost(data['tittle'], data['tagline'], data['content'], data['slug'],
-                        date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
+                           date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
             return redirect('cp')
         else:
             return render_template('newpost.html')
@@ -43,24 +51,17 @@ def new_post():
         return redirect("/cplogin?redirect=newpost")
 
 
-@app.route("/cp",methods = ['GET'])
+@app.route("/cp", methods=['GET'])
 def cp():
     if "login" in session:
-        if request.args:
-            redirect_url = request.args.get('redirect')
-            print(request.args)
-            return redirect(f"/{redirect_url}")
-        return render_template("cp.html", posts=sql.readAllPostsByAuthor(session["login"]), year=datetime.now().year, tittle='Control Pannel',user = session['login'])
+        return render_template("cp.html", posts=sql.readAllPostsByAuthor(session["login"]), year=datetime.now().year, tittle='Control Pannel', user=session['login'])
     else:
         return redirect("/cplogin")
 
-# @app.route("/login",methods = ["POST"])
-# def login():
-#     data = request.get_json()
-#     if sql.authenticateuser(data['uname'],data['password']):
-#         return True
 
 redirect_url = ''
+
+
 @app.route("/cplogin", methods=["GET", "POST"])
 def cplogin():
     global redirect_url
@@ -68,10 +69,10 @@ def cplogin():
         print(request.args.get("redirect"))
         redirect_url = "/"+request.args.get('redirect')
 
-    if request.method =='POST':
+    if request.method == 'POST':
         uname = request.form.get('uname')
         password = request.form.get('pass')
-        if sql.authenticateuser(uname,password):
+        if sql.authenticateuser(uname, password):
             session['login'] = uname
         else:
             flash("Username or password doesn't match")
@@ -82,10 +83,6 @@ def cplogin():
         return render_template("cplogin.html")
 
 
-
-
-
-
 @app.route("/update/<slug>", methods=["POST"])
 def update(slug):
     if "login" in session:
@@ -93,7 +90,7 @@ def update(slug):
             rdata = request.get_json()
             sql.updatePost(tittle=rdata["tittle"], tagline=rdata['tagline'],
                            content=str(rdata['content']), slug=slug, date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}')
-           
+
             return jsonify("sucess")
     else:
         return redirect("/cplogin")
@@ -104,7 +101,7 @@ def editpost(slug):
     if 'login' in session:
         return render_template("edit.html", post=sql.readPostBySlug(slug), tittle=f"Edit {sql.readPostBySlug(slug)['tittle']}")
     else:
-        return redirect(url_for("cplogin",redirect = f'/edit/{slug}'))
+        return redirect(url_for("cplogin", redirect=f'/edit/{slug}'))
 
 
 @app.route("/delete/<slug>", methods=["POST"])
@@ -137,5 +134,16 @@ def signup():
     return render_template("signup.html", tittle='SignUp for Bloggir')
 
 
+app.route('/logout')
+
+
+def logout():
+    if 'login' in session:
+        session.clear()
+        return redirect('/')
+    else:
+        return redirect('/cplogin')
+
+
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(debug=True)
