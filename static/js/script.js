@@ -41,23 +41,5 @@ function newpost(){
         'tagline': tagline,
         'content' : content 
     }    
-    ))
-}
-
-function login(){
-    var uname = document.getElementById('uname');
-    var password = document.getElementById('pass');
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST',"/login",true)
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    var r = xhr.send(JSON.stringify(
-    {
-        'uname': uname,
-        'password' : password 
-    }    
-    ))
-
-
-    
-
+    ));
 }
