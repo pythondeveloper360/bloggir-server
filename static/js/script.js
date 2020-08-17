@@ -32,7 +32,7 @@ function newpost(){
     var content = document.getElementById("content").innerHTML;
     
     var xhr = new XMLHttpRequest();
-    xhr.open('POST','/new-post',true);
+    xhr.open('POST','/newpost',true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     var r = xhr.send(JSON.stringify(
     {
