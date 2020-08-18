@@ -10,11 +10,11 @@ import os
 #                       port=str(os.getenv('port')),
 #                       database=str(os.getenv('database')))
 db = psycopg2.connect(
-    user = 'xubuuanpszwwcx',
-    password = '3e2b69885d81e646182281d1cfb60ed02a6a584d24b62ba81f4734f1ed8c5e2c',
-    host = 'ec2-54-197-254-117.compute-1.amazonaws.com',
-    port = '5432',
-    database = 'dffngl3u0qkkld'
+    user='xubuuanpszwwcx',
+    password='3e2b69885d81e646182281d1cfb60ed02a6a584d24b62ba81f4734f1ed8c5e2c',
+    host='ec2-54-197-254-117.compute-1.amazonaws.com',
+    port='5432',
+    database='dffngl3u0qkkld'
 )
 
 cursor = db.cursor()
@@ -43,8 +43,6 @@ cursor = db.cursor()
     Password
 
 """
-
-
 
 
 def readAllPosts():
@@ -105,7 +103,8 @@ def getAuthorUserName(slug):
 
 
 def getNameFromUserName(username):
-    sqlquery = '''select name from "users" where "username" = '{}';'''.format(username)
+    sqlquery = '''select name from "users" where "username" = '{}';'''.format(
+        username)
     cursor.execute(sqlquery)
     data = cursor.fetchone()
     if data:

@@ -7,8 +7,9 @@
 }
 #content{
   border:1px solid black;
-  height: 400px;
+  min-height: 400px;
   overflow-y: scroll;  
+  cursor: default;
 }
 #post{
 position: relative;
@@ -20,4 +21,16 @@ right: 10px;
   padding-left: 10px;
   padding-right: 10px;
 
+}
+
+.textarea{
+  height: 100px;
+  width: 100%;
+}
+.text{
+  position: absolute;
+  left: 150px;
+}
+.postdiv{
+  padding-left: 90%;
 }

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, abort, session, flash, redirect, jsonify, url_for, Markup
+from flask import Flask, render_template, request, abort, session, flash, redirect, jsonify, url_for, Markup,jsonify,Response
 import sql
 import json
 from datetime import datetime
@@ -40,11 +40,14 @@ def mypost():
 def new_post():
     if 'login' in session:
         if request.method == 'POST':
-            data = request.get_json()
+            tittle = request.form.get('tittle')
+            slug = request.form.get('slug')
+            tagline = request.form.get('tagline')
+            content = request.form.get('content')
             name = sql.getNameFromUserName(session['login'])
-            sql.insertPost(data['tittle'], data['tagline'], data['content'], data['slug'],
+            sql.insertPost(tittle, tagline, content, slug,
                            date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
-            return redirect('cp')
+            return redirect('/cp')
         else:
             return render_template('newpost.html')
     else:
