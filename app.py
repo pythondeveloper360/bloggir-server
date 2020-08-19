@@ -59,7 +59,7 @@ def cp():
     if "login" in session:
         return render_template("cp.html", posts=sql.readAllPostsByAuthor(session["login"]), year=datetime.now().year, tittle='Control Pannel', user=session['login'])
     else:
-        return redirect("/cplogin")
+        return redirect("/cplogin?redirect=cp")
 
 
 redirect_url = ''
@@ -69,7 +69,6 @@ redirect_url = ''
 def cplogin():
     global redirect_url
     if request.args:
-        print(request.args.get("redirect"))
         redirect_url = "/"+request.args.get('redirect')
 
     if request.method == 'POST':
@@ -80,7 +79,7 @@ def cplogin():
         else:
             flash("Username or password doesn't match")
             return render_template('cplogin.html')
-    if 'login' in session and redirect_url:
+    if 'login' in session and redirect_url != '':
         return redirect(redirect_url)
     else:
         return render_template("cplogin.html")
@@ -137,15 +136,13 @@ def signup():
     return render_template("signup.html", tittle='SignUp for Bloggir')
 
 
-app.route('/logout')
-
-
+@app.route('/logout')
 def logout():
     if 'login' in session:
         session.clear()
         return redirect('/')
     else:
-        return redirect('/cplogin')
+        return redirect('/cplogin?redirect=cp')
 
 
 if __name__ == '__main__':
