@@ -12,12 +12,12 @@ config = json.load(config)
 
 @app.route("/")
 def home():
-    return render_template("index.html", posts=sql.readAllPosts(), year=datetime.now().year, tittle='Bloggir')
+    return render_template("index.html", posts=sql.readAllPosts()[::-1], year=datetime.now().year, tittle='Bloggir')
 
 
 @app.route("/post")
 def post():
-    return render_template("post.html", posts=sql.readAllPosts(), le=len(sql.readAllPosts()), year=datetime.now().year, tittle='All Posts in Bloggir')
+    return render_template("post.html", posts=sql.readAllPosts()[::-1], le=len(sql.readAllPosts()), year=datetime.now().year, tittle='All Posts in Bloggir')
 
 
 @app.route("/post/<slug>")
@@ -31,7 +31,7 @@ def postview(slug):
 @app.route('/mypost')
 def mypost():
     if 'login' in session:
-        return render_template("post.html", posts=sql.readAllPostsByAuthor(session['login']), le=len(sql.readAllPostsByAuthor(session['login'])), year=datetime.now().year, tittle="All Posts by {}".format(sql.getNameFromUserName(session['login'])))
+        return render_template("post.html", posts=sql.readAllPostsByAuthor(session['login'])[::-1], le=len(sql.readAllPostsByAuthor(session['login'])), year=datetime.now().year, tittle="All Posts by {}".format(sql.getNameFromUserName(session['login'])))
     else:
         return redirect('/cplogin?redirect=mypost')
 
@@ -80,6 +80,8 @@ def cplogin():
             flash("Username or password doesn't match")
             return render_template('cplogin.html')
     if 'login' in session and redirect_url != '':
+        if r'%2F' in redirect_url:
+            redirect_url = redirect_url.replace(r'%2F',"/")
         return redirect(redirect_url)
     else:
         return render_template("cplogin.html")
@@ -103,17 +105,17 @@ def editpost(slug):
     if 'login' in session:
         return render_template("edit.html", post=sql.readPostBySlug(slug), tittle=f"Edit {sql.readPostBySlug(slug)['tittle']}")
     else:
-        return redirect(url_for("cplogin", redirect=f'/edit/{slug}'))
+        return redirect(f"/cplogin?redirect=edit/{slug}")
 
 
 @app.route("/delete/<slug>", methods=["POST"])
 def delete(slug):
     if session["login"] == sql.getAuthorUserName(slug):
         sql.deletePost(slug)
-        return redirect("/cp")
+        return jsonify({"succes":"true"})
     else:
         abort(400)
-    return redirect("/cplogin")
+        return jsonify({"succes":"false"})
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -146,4 +148,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run())
+    app.run()

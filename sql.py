@@ -126,28 +126,6 @@ def updatePost(tittle, tagline, content, slug, date):
     db.commit()
 
 
-def insertMessage(name, email, msg):
-    sqlquery = "INSERT into msg(name,email,msg) values('{}','{}','{}');".format(
-        name, email, msg)
-    cursor.execute(sqlquery)
-    db.commit()
-
-
-def readAllMsg():
-    array = []
-    sqlquery = "SELECT * FROM msg;"
-    cursor.execute(sqlquery)
-    result = cursor.fetchall()
-    for i in range(len(result)):
-        array.append(
-            dict(name=result[i][0], email=result[i][1], msg=result[i][2]))
-    return array
-
-
-def deleteMsg(id):
-    sqlquery = """delete from msg where "id" = '{}';""".format(id)
-    db.execute(sqlquery)
-    db.commit()
 
 
 def authenticateuser(user, password):
