@@ -9,7 +9,7 @@ function deletePost(slug){
 function post(slug){
     var tittle = document.getElementById("tittle").value;
     var tagline = document.getElementById("tagline").value;
-    var content = document.getElementById("content").innerHTML;
+    var content = document.getElementById("content").value;
     
     var xhr = new XMLHttpRequest();
     xhr.open("POST","/update/" + slug,true);
