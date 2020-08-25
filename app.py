@@ -110,7 +110,7 @@ def editpost(slug):
 
 @app.route("/delete/<slug>", methods=["POST"])
 def delete(slug):
-    if session["login"] == sql.getAuthorUserName(slug):
+    if 'login' in session:
         sql.deletePost(slug)
         return jsonify({"succes":"true"})
     else:

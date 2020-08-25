@@ -4,6 +4,7 @@ function deletePost(slug){
         var xhr =   new XMLHttpRequest();
         xhr.open("POST","/delete/" + slug ,true);
         $(`#${slug}`).remove();        
+        
 }
 }
 function post(slug){
