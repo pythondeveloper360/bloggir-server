@@ -39,7 +39,7 @@
         	<td>{{post["slug"]}}</td>
         	<td>{{post['date']}}</td>
         	<td><a href = "/edit/{{post['slug']}}"><button  class = "btn btn-primary" >Edit</button></td>
-          <td><button   class = "btn btn-primary" onclick=deletePost((`{{post["slug"]}}`))>Delete</button></td>
+          <td><button   class = "btn btn-primary" onclick=deletePost('{{post["slug"]}}')>Delete</button></td>
 
         </tr>
         
