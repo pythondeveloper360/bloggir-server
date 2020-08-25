@@ -58,9 +58,8 @@ def readAllPosts():
 
 
 def insertPost(tittle, tagline, content, slug, date, author, authorusername):
-    rsqlquery = "INSERT INTO post (tittle,tagline,content,slug,date,author,authorusername) values ('{}','{}','{}','{}','{}','{}','{}'); ".format(
+    sqlquery = "INSERT INTO post (tittle,tagline,content,slug,date,author,authorusername) values ('''{}''','''{}''','''{}''','''{}''','''{}''','''{}''','''{}'''); ".format(
         tittle, tagline, content, slug, date, author, authorusername)
-    sqlquery = r'{}'.format(rsqlquery)
 
     cursor.execute(sqlquery)
     db.commit()
@@ -122,9 +121,8 @@ def deletePost(slug):
 
 
 def updatePost(tittle, tagline, content, slug, date):
-    rsqlquery = """UPDATE post set tittle = '{}', tagline = '{}', content = '{}', date = '{}' WHERE slug = '{}';""".format(
+    sqlquery = """UPDATE post set tittle = '''{}''', tagline = '''{}''', content = '''{}''', date = '''{}''' WHERE slug = '{}';""".format(
         tittle, tagline, content, date, slug)
-    sqlquery = r'{}'.format(rsqlquery)
     cursor.execute(sqlquery)
     db.commit()
 
