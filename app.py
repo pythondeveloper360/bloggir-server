@@ -82,6 +82,7 @@ def cplogin():
     if 'login' in session and redirect_url != '':
         if r'%2F' in redirect_url:
             redirect_url = redirect_url.replace(r'%2F',"/")
+        return redirect(redirect_url)
     elif redirect_url == '':
         redirect_url = '/cp'
         return redirect(redirect_url)
