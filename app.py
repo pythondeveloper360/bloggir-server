@@ -83,8 +83,8 @@ def cplogin():
         if r'%2F' in redirect_url:
             redirect_url = redirect_url.replace(r'%2F',"/")
     elif redirect_url == '':
-            redirect_url = '/cp'
-            return redirect(redirect_url)
+        redirect_url = '/cp'
+        return redirect(redirect_url)
     else:
         return render_template("cplogin.html")
 
