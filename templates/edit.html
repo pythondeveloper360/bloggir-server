@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+{% extends "baseadmin.html" %}
+{% block body %}<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -8,7 +9,8 @@
 	<title>{{post['tittle']}}</title>
 </head>
 <body>
-<div id = 'div'>
+
+<div id = 'div' style = "position: sticky;top:1;">
 <form action="">
 	<label for="tittle">Tittle</label>
 	
@@ -28,6 +30,8 @@
 <button id = 'post' onclick="post(`{{post['slug']}}`)">Post</button>
 </body>
 </html>
+
+{% endblock %}
 
 
 

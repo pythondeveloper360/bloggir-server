@@ -12,6 +12,8 @@ config = json.load(config)
 
 @app.route("/")
 def home():
+    if "login" in session:
+        return render_template("sindex.html", posts=sql.readAllPosts()[::-1], year=datetime.now().year, tittle='Bloggir')
     return render_template("index.html", posts=sql.readAllPosts()[::-1], year=datetime.now().year, tittle='Bloggir')
 
 
@@ -46,7 +48,7 @@ def new_post():
             content = request.form.get('content')
             name = sql.getNameFromUserName(session['login'])
             sql.insertPost(tittle, tagline, content, slug,
-                           date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
+                            date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
             return redirect('/cp')
         else:
             return render_template('newpost.html')
@@ -96,7 +98,7 @@ def update(slug):
         if request.method == "POST":
             rdata = request.get_json()
             sql.updatePost(tittle=rdata["tittle"], tagline=rdata['tagline'],
-                           content=str(rdata['content']), slug=slug, date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}')
+                            content=str(rdata['content']), slug=slug, date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}')
 
             return jsonify("sucess")
     else:
@@ -151,4 +153,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
