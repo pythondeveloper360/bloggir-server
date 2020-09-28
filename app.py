@@ -33,7 +33,10 @@ def postview(slug):
 @app.route('/mypost')
 def mypost():
     if 'login' in session:
-        return render_template("post.html", posts=sql.readAllPostsByAuthor(session['login'])[::-1], le=len(sql.readAllPostsByAuthor(session['login'])), year=datetime.now().year, tittle="All Posts by {}".format(sql.getNameFromUserName(session['login'])))
+        le=len(sql.readAllPostsByAuthor(session['login']))
+        le = le if le else "No post yet"
+        return render_template("post.html", posts=sql.readAllPostsByAuthor(session['login'])[::-1], le = le, year=datetime.now().year, tittle="All Posts by {}".format(sql.getNameFromUserName(session['login'])))
+
     else:
         return redirect('/cplogin?redirect=mypost')
 
@@ -79,7 +82,7 @@ def cplogin():
         if sql.authenticateuser(uname, password):
             session['login'] = uname
         else:
-            flash("Username or password doesn't match")
+            flash("Username or password does not nbsp match")
             return render_template('cplogin.html')
     if 'login' in session and redirect_url != '':
         if r'%2F' in redirect_url:
@@ -127,19 +130,16 @@ def delete(slug):
 def signup():
     if request.method == "POST":
         name = request.form.get('name')
-        uname = request.form.get('uname')
+        username = request.form.get('uname')
         email = request.form.get('email')
         password = request.form.get('pass')
-        if (sql.checkuser(email)) == False:
-            if len(password) < 10:
-                flash("Password must be longer than 10 characters")
-                return render_template('signup.html', tittle='SignUp for Bloggir')
-            sql.signUpUser(name, email, uname, password)
+        work = sql.signUpUser(name,email,username,password)
+        if work:
             return redirect("/cplogin")
         else:
-            flash("User exists")
-            return render_template("signup.html")
-
+            flash("Username exists")
+            return redirect("/signup")
+        
     return render_template("signup.html", tittle='SignUp for Bloggir')
 
 

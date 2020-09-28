@@ -3,14 +3,14 @@
 
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('img/post-bg.jpg')">
-   <!--  <div class="overlay"></div> -->
+  <header class="masthead" style="background-image: url({{url_for('static',filename = 'img/post-bg.jpg')}})">
+  <!--  <div class="overlay"></div> -->
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1>All Posts</h1>
-            <h4 >Total Posts {{le}}</h4>
+            <h1 style="color: black;">All Posts</h1>
+            <h3 style="color: rgb(0, 0, 0);">{{le}}</h4>
           </div>
         </div>
       </div>
@@ -18,7 +18,7 @@
   </header>
 
   <!-- Post Content -->
- 
+
   <!-- Main Content -->
   <div class="container">
     <div class="row">
