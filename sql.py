@@ -58,7 +58,7 @@ def readAllPosts():
     # print(data)
     for i in range(len(data)):
         array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], content=data[i]
-                          [3], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
+                        [3], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
     return array
 
 
@@ -67,7 +67,7 @@ def insertPost(tittle, tagline, content, slug, date, author, authorusername):
         tittle=sql.Identifier("tittle"), tagline=sql.Identifier("tagline"), content=sql.Identifier("content"), slug=sql.Identifier("slug"), date=sql.Identifier("date"), author=sql.Identifier("author"), authorusername=sql.Identifier("authorusername"))
 
     cursor.execute(sqlquery, (tittle, tagline, content,
-                              slug, date, author, authorusername))
+                            slug, date, author, authorusername))
     db.commit()
 
 
@@ -99,8 +99,18 @@ def readAllPostsByAuthor(authorusername):
     data = cursor.fetchall()
     for i in range(len(data)):
         array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], content=data[i]
-                          [3], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
+                        [3], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
     return array
+
+def informationByusername(username):
+    re = {}
+    sqlquery = sql.SQL('select * from users where {username} = %s').format(
+        username = sql.Identifier("username")
+    )
+    cursor.execute(sqlquery,(username,))
+    data = cursor.fetchall()
+    re = {"name":data[0][0],"email":data[0][1],"username":data[0][2]} if data else False
+    return re
 
 
 def getAuthorUserName(slug):
@@ -174,8 +184,20 @@ def checkuser(username):
 
 def changePassword(userName, oldPassword, newPassword):
     sqlquery = sql.SQL('select * from users where {username} = %s and {password} = %s;').format(
-        username=sql.Identifier("username"), password=sql.Identifier("password"))
-    cursor.execute(sqlquery)
+        username=sql.Identifier("username"),
+        password=sql.Identifier("password")
+        )
+    cursor.execute(sqlquery,(userName,oldPassword))
     data = cursor.fetchone()
-    if data and data[3] == oldPassword:
-        sqlquery = sql.SQL('update users set {password} = %s where {username} = %s')
+    if data:
+        if data[3] == oldPassword:
+            sqlquery = sql.SQL('update users set {password} = %s where {username} = %s').format(
+                password = sql.Identifier("password"),
+                username = sql.Identifier("username")
+            )
+            cursor.execute(sqlquery,(newPassword,userName))
+            db.commit()
+            return True
+    else:
+        return False
+        

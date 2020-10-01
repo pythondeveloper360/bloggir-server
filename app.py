@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, abort, session, flash, redirect, jsonify, url_for, Markup,jsonify,Response
+from flask import Flask, render_template, request, abort, session, flash, redirect, jsonify, url_for, Markup, jsonify, Response,make_response
 import sql
 import json
 from datetime import datetime
@@ -33,9 +33,9 @@ def postview(slug):
 @app.route('/mypost')
 def mypost():
     if 'login' in session:
-        le=len(sql.readAllPostsByAuthor(session['login']))
+        le = len(sql.readAllPostsByAuthor(session['login']))
         le = le if le else "No post yet"
-        return render_template("post.html", posts=sql.readAllPostsByAuthor(session['login'])[::-1], le = le, year=datetime.now().year, tittle="All Posts by {}".format(sql.getNameFromUserName(session['login'])))
+        return render_template("post.html", posts=sql.readAllPostsByAuthor(session['login'])[::-1], le=le, year=datetime.now().year, tittle="All Posts by {}".format(sql.getNameFromUserName(session['login'])))
 
     else:
         return redirect('/cplogin?redirect=mypost')
@@ -51,7 +51,7 @@ def new_post():
             content = request.form.get('content')
             name = sql.getNameFromUserName(session['login'])
             sql.insertPost(tittle, tagline, content, slug,
-                            date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
+                           date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
             return redirect('/cp')
         else:
             return render_template('newpost.html')
@@ -86,7 +86,7 @@ def cplogin():
             return render_template('cplogin.html')
     if 'login' in session and redirect_url != '':
         if r'%2F' in redirect_url:
-            redirect_url = redirect_url.replace(r'%2F',"/")
+            redirect_url = redirect_url.replace(r'%2F', "/")
         return redirect(redirect_url)
     elif redirect_url == '':
         redirect_url = '/cp'
@@ -101,7 +101,7 @@ def update(slug):
         if request.method == "POST":
             rdata = request.get_json()
             sql.updatePost(tittle=rdata["tittle"], tagline=rdata['tagline'],
-                            content=str(rdata['content']), slug=slug, date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}')
+                        content=str(rdata['content']), slug=slug, date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}')
 
             return jsonify("sucess")
     else:
@@ -120,10 +120,10 @@ def editpost(slug):
 def delete(slug):
     if 'login' in session:
         sql.deletePost(slug)
-        return jsonify({"succes":"true"})
+        return jsonify({"succes": "true"})
     else:
         abort(400)
-        return jsonify({"succes":"false"})
+        return jsonify({"succes": "false"})
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -133,16 +133,36 @@ def signup():
         username = request.form.get('uname')
         email = request.form.get('email')
         password = request.form.get('pass')
-        work = sql.signUpUser(name,email,username,password)
+        work = sql.signUpUser(name, email, username, password)
         if work:
             return redirect("/cplogin")
         else:
             flash("Username exists")
             return redirect("/signup")
-        
+
     return render_template("signup.html", tittle='SignUp for Bloggir')
 
 
+@app.route("/pouch")
+def pouch():
+    if request.method == "POST": 
+        if "login" in session:
+            return render_template('pouch.html', data=sql.informationByusername(session['login']))
+        return redirect("/cplogin?redirect=pouch")
+    elif
+
+
+@app.route("/changepassword", methods=["POST"])
+def changepassword():
+    if "login" in session:
+        data = request.get_json()
+        work = sql.changePassword(session['login'],data['current'],data['newpassword'])
+        if work:
+            return jsonify({"done":"sdfsd"})
+        else:
+            return jsonify({"not done":"dsd"})
+    else:
+        return make_response("eroor")
 @app.route('/logout')
 def logout():
     if 'login' in session:
