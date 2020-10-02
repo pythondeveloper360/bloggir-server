@@ -145,11 +145,16 @@ def signup():
 
 @app.route("/pouch")
 def pouch():
-    if request.method == "POST": 
+    if request.method == "GET": 
         if "login" in session:
             return render_template('pouch.html', data=sql.informationByusername(session['login']))
         return redirect("/cplogin?redirect=pouch")
-    elif
+    if request.method == "POST":
+        if "login" in session
+            name = request.form.get("name")
+            about = request.form.get("about")
+            sql.editprofile(session["login"],name,about)
+            
 
 
 @app.route("/changepassword", methods=["POST"])
