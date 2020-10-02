@@ -133,7 +133,8 @@ def signup():
         username = request.form.get('uname')
         email = request.form.get('email')
         password = request.form.get('pass')
-        work = sql.signUpUser(name, email, username, password)
+        about = request.form.get("about") 
+        work = sql.signUpUser(name, email, username, password,about)
         if work:
             return redirect("/cplogin")
         else:
