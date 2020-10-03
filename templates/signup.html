@@ -10,13 +10,12 @@
 
     <title>{{tittle}}</title>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
 
     <!-- Bootstrap core CSS -->
-    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{url_for('static',filename = 'css/ootstrap.min.css')}}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="https://getbootstrap.com/docs/4.0/examples/sign-in/signin.css" rel="stylesheet">
+    <link href="{{url_for('static',filename = 'css/signin.css')}}" rel="stylesheet">
   </head>
   {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -54,4 +53,4 @@
   </body>
 </html>
 
-<% endblock k%>
+{% endblock %}
