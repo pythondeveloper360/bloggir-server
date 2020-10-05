@@ -4,12 +4,6 @@ import json
 import os
 
 
-# db = sqlite3.connect("db.sqlite3", check_same_thread=False)
-# db = psycopg2.connect(user=str(os.getenv('username')),
-#                       password=str(os.getenv('password')),
-#                       host=str(os.getenv('host')),
-#                       port=str(os.getenv('port')),
-#                       database=str(os.getenv('database')))
 db = psycopg2.connect(
     user='xubuuanpszwwcx',
     password='3e2b69885d81e646182281d1cfb60ed02a6a584d24b62ba81f4734f1ed8c5e2c',

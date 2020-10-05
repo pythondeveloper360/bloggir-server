@@ -13,8 +13,8 @@ config = json.load(config)
 @app.route("/")
 def home():
     if "login" in session:
-        return render_template("sindex.html", posts=sql.readAllPosts()[::-1], year=datetime.now().year, tittle='Bloggir')
-    return render_template("index.html", posts=sql.readAllPosts()[::-1], year=datetime.now().year, tittle='Bloggir')
+        return render_template("index.html", base = "baseadmin",posts=sql.readAllPosts()[::-1], year=datetime.now().year, tittle='Bloggir')
+    return render_template("index.html",base = "base" ,posts=sql.readAllPosts()[::-1], year=datetime.now().year, tittle='Bloggir')
 
 
 @app.route("/post")
@@ -51,7 +51,7 @@ def new_post():
             content = request.form.get('content')
             name = sql.getNameFromUserName(session['login'])
             sql.insertPost(tittle, tagline, content, slug,
-                           date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
+                        date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
             return redirect('/cp')
         else:
             return render_template('newpost.html')
