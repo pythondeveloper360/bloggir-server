@@ -24,18 +24,25 @@ def post():
 
 @app.route("/post/<slug>")
 def postview(slug):
-    if slug in sql.slugs():
-        return render_template("postview.html", post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, tittle=sql.readPostBySlug(slug)["tittle"])
+    if  "login" in session and session["login"] == sql.getAuthorUserName(slug):
+        if slug in sql.slugs():
+            return render_template("postview.html", base = "baseadmin",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"])
+        else:
+            abort(404)
     else:
-        abort(404)
-
+        if slug in sql.slugs():
+            sql.postview(slug)
+            return render_template("postview.html", base = "base",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"])
+        else:
+            abort(404)
+        
 
 @app.route('/mypost')
 def mypost():
     if 'login' in session:
         le = len(sql.readAllPostsByAuthor(session['login']))
         le = le if le else "No post yet"
-        return render_template("post.html", posts=sql.readAllPostsByAuthor(session['login'])[::-1], le=le, year=datetime.now().year, tittle="All Posts by {}".format(sql.getNameFromUserName(session['login'])))
+        return render_template("post.html",base = "baseadmin", posts=sql.readAllPostsByAuthor(session['login'])[::-1], le=le, year=datetime.now().year, tittle="All Posts by {}".format(sql.getNameFromUserName(session['login'])))
 
     else:
         return redirect('/cplogin?redirect=mypost')

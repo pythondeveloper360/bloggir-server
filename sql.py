@@ -52,7 +52,7 @@ def readAllPosts():
     # print(data)
     for i in range(len(data)):
         array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], content=data[i]
-                          [3], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
+                        [3], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
     return array
 
 
@@ -61,7 +61,7 @@ def insertPost(tittle, tagline, content, slug, date, author, authorusername):
         tittle=sql.Identifier("tittle"), tagline=sql.Identifier("tagline"), content=sql.Identifier("content"), slug=sql.Identifier("slug"), date=sql.Identifier("date"), author=sql.Identifier("author"), authorusername=sql.Identifier("authorusername"))
 
     cursor.execute(sqlquery, (tittle, tagline, content,
-                              slug, date, author, authorusername))
+                            slug, date, author, authorusername))
     db.commit()
 
 
@@ -70,8 +70,9 @@ def readPostBySlug(slug):
         'SELECT * FROM post where {slug} = %s;').format(slug=sql.Identifier("slug"))
     cursor.execute(sqlquery, (slug,))
     data = cursor.fetchone()
-    return dict(id=data[0], tittle=data[1], tagline=data[2], content=data
-                [3], slug=data[4], date=data[5], author=data[6], authorusername=data[7])
+    return dict(id=data[0], tittle=data[1], tagline=data[2], content=data[3],
+                slug=data[4], date=data[5], author=data[6], authorusername=data[7],
+                view = data[8])
 
 
 def slugs():
@@ -96,6 +97,22 @@ def readAllPostsByAuthor(authorusername):
                     [3], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
     return array
 
+def postview(slug):
+    if slug in slugs():
+        sqlquery = sql.SQL('select view from post where {slug} = %s').format(
+            slug = sql.Identifier("slug")
+            )
+        cursor.execute(sqlquery,(slug,))
+        data = cursor.fetchone()[0]
+        view = data if data else 0
+        sq = sql.SQL('update post set view = %s where {slug} = %s').format(
+            slug = sql.Identifier("slug")
+        )
+        cursor.execute(sq,((int(view)+1),slug))
+        db.commit()
+        return True
+    else:
+        return False
 
 def informationByusername(username):
     re = {}
@@ -112,9 +129,9 @@ def informationByusername(username):
 def getAuthorUserName(slug):
     sqlquery = sql.SQL('SELECT authorusername from post where {slug} = %s;').format(
         slug=sql.Identifier("slug"))
-    cursor.execute(sqlquery, slug)
+    cursor.execute(sqlquery, (slug,))
     data = cursor.fetchone()
-    return data if data else "no user"
+    return data[0] if data else "no user"
 
 
 def getNameFromUserName(username):

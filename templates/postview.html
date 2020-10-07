@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block body %}
-
+<style>
+  #comment{
+    width: 90%;
+    font-size: large;
+  }
+</style>
   <!-- Page Header -->
   <header class="masthead" style="background-image: url({{url_for('static',filename = 'img/post-bg.jpg')}})">
     <div class="overlay"></div>
@@ -9,6 +14,8 @@
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
             <h1>{{post['tittle']}}</h1>
+              <h4>Viewed : {{post['view']}}</h4>
+
             <span class="meta">Posted by
               {{post['author']}}
               on {{post['date']}}</span>
@@ -30,5 +37,6 @@
   </article>
 
   <hr>
+  <textarea name="comment" id="comment" cols="1" rows="1"></textarea>
 
 {% endblock %}
