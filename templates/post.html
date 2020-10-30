@@ -1,4 +1,9 @@
-{% extends "base.html" %}
+{% if base == "baseadmin"%}
+  {% extends "baseadmin.html" %}
+{%  else %}
+  {% extends "base.html" %}
+{%endif%}
+
 {% block body %}
 <link rel = "icon" href="{{url_for('static',filename = 'img/blog.png')}}" type = "image/x-icon">
 

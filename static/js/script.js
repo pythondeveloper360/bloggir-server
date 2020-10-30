@@ -43,6 +43,7 @@ function changePassword(){
             "current" :current,
             "newpassword":passrword
         }))
+        console.log(xhr.response)
     }
     
 }

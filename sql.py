@@ -58,12 +58,21 @@ def readAllPosts():
 
 
 def insertPost(tittle, tagline, content, slug, date, author, authorusername):
-    sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername}) values (%s,%s,%s,%s,%s,%s,%s);').format(
-        tittle=sql.Identifier("tittle"), tagline=sql.Identifier("tagline"), content=sql.Identifier("content"), slug=sql.Identifier("slug"), date=sql.Identifier("date"), author=sql.Identifier("author"), authorusername=sql.Identifier("authorusername"))
+    try:
+        sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername},{likes},{view}) values (%s,%s,%s,%s,%s,%s,%s,0,1);').format(
+            tittle=sql.Identifier("tittle"), tagline=sql.Identifier("tagline"),
+            content=sql.Identifier("content"), 
+            slug=sql.Identifier("slug"), date=sql.Identifier("date"),
+            author=sql.Identifier("author"),
+            authorusername=sql.Identifier("authorusername"),
+            likes = sql.Identifier("likes"),view = sql.Identifier("view"))
 
-    cursor.execute(sqlquery, (tittle, tagline, content,
-                            slug, date, author, authorusername))
-    db.commit()
+        cursor.execute(sqlquery, (tittle, tagline, content,
+                                slug, date, author, authorusername))
+        db.commit()
+        return True
+    except:
+        pass
 
 
 def readPostBySlug(slug):
@@ -73,7 +82,7 @@ def readPostBySlug(slug):
     data = cursor.fetchone()
     return dict(id=data[0], tittle=data[1], tagline=data[2], content=data[3],
                 slug=data[4], date=data[5], author=data[6], authorusername=data[7],
-                view = data[8])
+                view = data[8],likes = data[9])
 
 
 def slugs():
@@ -112,7 +121,7 @@ def postview(slug):
         cursor.execute(sq,((int(view)+1),slug))
         db.commit()
         return True
-    else:
+    else:       
         return False
 
 def informationByusername(username):

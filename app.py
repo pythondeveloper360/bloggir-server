@@ -57,7 +57,7 @@ def new_post():
             tagline = request.form.get('tagline')
             content = request.form.get('content')
             name = sql.getNameFromUserName(session['login'])
-            sql.insertPost(tittle, tagline, content, slug,
+            work = sql.insertPost(tittle, tagline, content, slug,
                         date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
             return redirect('/cp')
         else:

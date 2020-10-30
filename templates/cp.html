@@ -4,7 +4,7 @@
 {% block body %}
 <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
   <!-- Page Header -->
- 
+
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
@@ -26,7 +26,10 @@
 	 <tr>
 	    <th><h3>Name</h3></th>
 	    <th><h3>Slug</h3></th>
-	    <th><h3>Date</h3></th>
+      <th><h3>Date</h3></th>
+      <th><h3>&#128077;</h3></th>
+      <th><h3>&#128078;</h3></th>
+      <th><h3>&#128172;</h3></th>
 	    <th><h3>Edit</h3></th>
 	    <th><h3>Delete</h3></th>
 	  </tr>
@@ -35,11 +38,14 @@
         {% for post in posts %}
         {%set s = post['slug']%}
         <tr id = '{{post["slug"]}}'>
-        	<td>{{post["tittle"]}}</td>
-        	<td>{{post["slug"]}}</td>
-        	<td>{{post['date']}}</td>
-        	<td><a href = "/edit/{{post['slug']}}"><button  class = "btn btn-primary" >Edit</button></td>
-          <td><button   class = "btn btn-primary" onclick=deletePost('{{post["slug"]}}')>Delete</button></td>
+          <td>{{post["tittle"]}}</td>
+          <td>{{post["slug"]}}</td>
+          <td>{{post['date']}}</td>
+          <td>1</td>
+          <td>1</td>
+          
+          <td><a href = "/edit/{{post['slug']}}"><button  class = "btn btn-primary" >Edit</button></td>
+          <td><button class = "btn btn-primary" onclick=deletePost('{{post["slug"]}}')>Delete</button></td>
 
         </tr>
         

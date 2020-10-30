@@ -10,3 +10,6 @@ def decrypt(list):
     for i in range(len(list)):
         s+= chr(list[i])
     return s[::-1]
+
+def uniqueslug(slug,slugs):
+    nums = [chr(i) for i in range(47,56)]
