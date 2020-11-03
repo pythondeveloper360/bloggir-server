@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, abort, session, flash, redirect, jsonify, url_for, Markup, jsonify, Response,make_response
 import sql
 import json
+from flask_socketio import SocketIO
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "hazala"
+socketio = SocketIO(app)
 
-config = open("config.json", "r")
-config = json.load(config)
 
 
 @app.route("/")
@@ -35,7 +35,7 @@ def postview(slug):
             return render_template("postview.html", base = "base",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"])
         else:
             abort(404)
-        
+
 
 @app.route('/mypost')
 def mypost():
@@ -140,7 +140,7 @@ def signup():
         username = request.form.get('uname')
         email = request.form.get('email')
         password = request.form.get('pass')
-        about = request.form.get("about") 
+        about = request.form.get("about")
         work = sql.signUpUser(name, email, username, password,about)
         if work:
             return redirect("/cplogin")
@@ -151,18 +151,19 @@ def signup():
     return render_template("signup.html", tittle='SignUp for Bloggir')
 
 
-@app.route("/pouch")
-def pouch():
-    if request.method == "GET": 
+@app.route("/setting")
+def setting():
+    if request.method == "GET":
         if "login" in session:
-            return render_template('pouch.html', data=sql.informationByusername(session['login']))
-        return redirect("/cplogin?redirect=pouch")
+            return render_template('setting.html', data=sql.informationByusername(session['login']))
+        return redirect("/cplogin?redirect=setting")
     if request.method == "POST":
         if "login" in session:
             name = request.form.get("name")
             about = request.form.get("about")
             sql.editprofile(session["login"],name,about)
-            
+            return jsonify("Done")
+
 
 
 @app.route("/changepassword", methods=["POST"])
@@ -184,6 +185,9 @@ def logout():
     else:
         return redirect('/cplogin?redirect=cp')
 
+@socketio.on("hanzala")
+def hanzala(slug):
+    print(slug)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app,debug = True)
