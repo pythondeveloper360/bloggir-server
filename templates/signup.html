@@ -1,56 +1,31 @@
-{% extends "base.html" %}
-{% block body %}
-<html lang="en">
+
+<html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="{{url_for('static',filename = 'img/sup.png')}}">
-
-    <title>{{tittle}}</title>
-
-
-    <!-- Bootstrap core CSS -->
-    <link href="{{url_for('static',filename = 'css/ootstrap.min.css')}}" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="{{url_for('static',filename = 'css/signin.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   </head>
-  {% with messages = get_flashed_messages() %}
-      {% if messages %}
-          {% for message in messages %}
-              <!-- Do something with the message -->
-              <script>alert('{{message}}')</script>
+<body>
 
-          {% endfor %}
-      {% endif %}
-  {% endwith %}
+  <div class="row">
+    <div class="col s12 m7">
+      <div class="card">
+        <div class="card-image">
+          <img src="images/sample-1.jpg">
+          <span class="card-title">Card Title</span>
+        </div>
+        <div class="card-content">
+          <p>I am a very simple card. I am good at containing small bits of information.
+          I am convenient because I require little markup to use effectively.</p>
+        </div>
+        <div class="card-action">
+          <a href="#">This is a link</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <body class="text-center">
-    <form class="form-signin" action="/signup" method="post">
-      <img class="mb-4" src="{{url_for('static',filename = 'img/sup.png')}}" alt="" width="72" height="72">
-      <h1 class="h3 mb-3 font-weight-normal">SignUp</h1>
-      
-      <label for="name" class="sr-only">Name</label>
-      <input type="text" id="name" class="form-control" name = "name" placeholder="Name" required autofocus>
-      
-      <label for="user" class="sr-only">Username</label>
-      <input type="text" id="user" class="form-control" name = "uname" placeholder="User Name" autofocus>
-      
-      <label for="email" class="sr-only">Email address</label>
-      <input type="email" id="email" class="form-control" name = "email" placeholder="Email address" required>
 
-      <textarea name="about" class = "form-control" id="about" cols="30" rows="5" placeholder="About"></textarea>
-      
-      <label for="password" class="sr-only">Password</label>
-      <input type="password" id="password" class="form-control" name = "pass" placeholder="Password" required is="#password">
 
-      <button class="btn btn-lg btn-primary btn-block" type="submit">SignUp</button>
-      <br>
-      <h6>Already have an account ?   <a href="/cplogin">Sign In</a></h6>
-    </form>
-  </body>
+</body>
+
 </html>
-
-{% endblock %}

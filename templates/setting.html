@@ -8,20 +8,21 @@
     <title>Setting</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
 </head>
 <div class="container">
   <div class="row">
     <form class="col s12">
       <div class="row">
         <div class="input-field col s3">
-          <input  id="first_name" type="text" class="validate">
+          <input  id="first_name" type="text"  value = "{{data['name']}}"class="validate">
           <label for="first_name">Name</label>
         </div>
       </div>
 
       <div class="row">
         <div class="input-field col s5">
-          <textarea id="textarea1" class="materialize-textarea"></textarea>
+          <textarea id="textarea1" class="materialize-textarea">{{data['about']}}</textarea>
           <label for="textarea1">About</label>
         </div>
       </div>
@@ -47,7 +48,7 @@
           </div>
         </div>
         <div class="card-action">
-          <a class="waves-effect waves-light btn">Change password</a>
+          <a class="waves-effect waves-light btn" onclick="changePassword()">Change password</a>
         </div>
       </div>
 

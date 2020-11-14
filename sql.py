@@ -34,7 +34,7 @@ cursor = db.cursor()
 id,tittle,tagline,content,slug,date,author,authorusername
 """
 """
-    
+
     |Users|
     Id
     Name
@@ -61,7 +61,7 @@ def insertPost(tittle, tagline, content, slug, date, author, authorusername):
     try:
         sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername},{likes},{view}) values (%s,%s,%s,%s,%s,%s,%s,0,1);').format(
             tittle=sql.Identifier("tittle"), tagline=sql.Identifier("tagline"),
-            content=sql.Identifier("content"), 
+            content=sql.Identifier("content"),
             slug=sql.Identifier("slug"), date=sql.Identifier("date"),
             author=sql.Identifier("author"),
             authorusername=sql.Identifier("authorusername"),
@@ -121,7 +121,7 @@ def postview(slug):
         cursor.execute(sq,((int(view)+1),slug))
         db.commit()
         return True
-    else:       
+    else:
         return False
 
 def informationByusername(username):
@@ -130,9 +130,9 @@ def informationByusername(username):
         username=sql.Identifier("username")
     )
     cursor.execute(sqlquery, (username,))
-    data = cursor.fetchall()
-    re = {"name": data[0][0], "email": data[0][1],
-        "username": data[0][2]} if data else False
+    data = cursor.fetchone()
+    re = {"name": data[0], "email": data[1],
+        "username": data[2],"about":data[4]} if data else False
     return re
 
 
@@ -236,3 +236,7 @@ def changePassword(userName, oldPassword, newPassword):
             return True
     else:
         return False
+def like_blog(slug):
+    sqlquery = sql.SQL('select likes from posts where {slug} = %s').format(
+        slug = sql.Identifier("slug")
+    )

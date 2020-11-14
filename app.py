@@ -1,20 +1,18 @@
 from flask import Flask, render_template, request, abort, session, flash, redirect, jsonify, url_for, Markup, jsonify, Response,make_response
 import sql
 import json
-from flask_socketio import SocketIO
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "hazala"
-socketio = SocketIO(app)
 
 
 
 @app.route("/")
 def home():
     if "login" in session:
-        return render_template("index.html", base = "baseadmin",posts=sql.readAllPosts()[::-1], year=datetime.now().year, tittle='Bloggir')
-    return render_template("index.html",base = "base" ,posts=sql.readAllPosts()[::-1], year=datetime.now().year, tittle='Bloggir')
+        return render_template("index.html", base = "baseadmin",posts=sql.readAllPosts()[::-1], year=datetime.now().year, page_tittle='Bloggir')
+    return render_template("index.html",base = "base" ,posts=sql.readAllPosts()[::-1], year=datetime.now().year, page_tittle='Bloggir')
 
 
 @app.route("/post")
@@ -24,14 +22,16 @@ def post():
 
 @app.route("/post/<slug>")
 def postview(slug):
-    if  "login" in session and session["login"] == sql.getAuthorUserName(slug):
+    if  "login" in session:
+        if session["login"] != sql.getAuthorUserName(slug):
+                sql.postview(slug)
         if slug in sql.slugs():
             return render_template("postview.html", base = "baseadmin",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"])
         else:
             abort(404)
     else:
         if slug in sql.slugs():
-            sql.postview(slug)
+
             return render_template("postview.html", base = "base",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"])
         else:
             abort(404)
@@ -172,9 +172,9 @@ def changepassword():
         data = request.get_json()
         work = sql.changePassword(session['login'],data['current'],data['newpassword'])
         if work:
-            return jsonify({"done":"sdfsd"})
+            return make_response("Done",200)
         else:
-            return jsonify({"not done":"dsd"})
+            return make_response("Not done",401)
     else:
         return make_response("eroor")
 @app.route('/logout')
@@ -185,9 +185,13 @@ def logout():
     else:
         return redirect('/cplogin?redirect=cp')
 
-@socketio.on("hanzala")
-def hanzala(slug):
-    print(slug)
+# @app.route("/like")
+# def like():
+#     slug = request.get_json()['slug']
+#     if "login" in session:
+
+
+
 
 if __name__ == '__main__':
-    socketio.run(app,debug = True)
+    app.run(debug = True)
