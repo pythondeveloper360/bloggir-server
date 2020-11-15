@@ -1,31 +1,60 @@
-
-<html>
-  <head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
+    <title>Setting</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  </head>
-<body>
-
+    <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
+</head>
+<div class = "container">
   <div class="row">
-    <div class="col s12 m7">
-      <div class="card">
-        <div class="card-image">
-          <img src="images/sample-1.jpg">
-          <span class="card-title">Card Title</span>
+    <div class="col s12 m6">
+      <div class="card blue darken-4">
+        <div class="card-content blue lighten-4">
+          <span class="card-title">Sign Up</span>
+            <div class="row">
+              <form class="col s12">
+                <div class="row">
+                  <div class="input-field col s6">
+                    <input id="name" name = "name" type="text" class="validate">
+                    <label for="name">First Name</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s6">
+                    <input  id="uname" name = "uname"type="text" class="validate">
+                    <label for="uname">User Name</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s10">
+                    <input id="email" name = "email"type="email" class="validate">
+                    <label for="email">Email</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s10">
+                    <input id="pass" name = "pass" type="password" class="validate">
+                    <label for="pass">Password</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <textarea id="textarea1" class="materialize-textarea"></textarea>
+                    <label for="textarea1">About</label>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+
         </div>
-        <div class="card-content">
-          <p>I am a very simple card. I am good at containing small bits of information.
-          I am convenient because I require little markup to use effectively.</p>
-        </div>
-        <div class="card-action">
-          <a href="#">This is a link</a>
+        <div class="card-action blue lighten-4">
+          <a class="waves-effect waves-light btn" onclick = "signup()">Signup</a>
         </div>
       </div>
     </div>
   </div>
-
-
-
-</body>
-
-</html>
+</div>

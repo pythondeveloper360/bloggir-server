@@ -3,9 +3,9 @@ import sql
 import json
 from datetime import datetime
 
+
 app = Flask(__name__)
 app.secret_key = "hazala"
-
 
 
 @app.route("/")

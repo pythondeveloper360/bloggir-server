@@ -73,6 +73,15 @@ like = (slug) =>{
                 M.toast({html:"Sign in to like blog"})
             }
     }
+  }
+}
 
+
+
+
+
+
+
+signup = ()=>{
 
 }
