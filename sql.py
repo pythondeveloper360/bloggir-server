@@ -1,6 +1,5 @@
 import psycopg2
 from psycopg2 import sql
-import functions
 import json
 import os
 
@@ -236,7 +235,19 @@ def changePassword(userName, oldPassword, newPassword):
             return True
     else:
         return False
-def like_blog(slug):
-    sqlquery = sql.SQL('select likes from posts where {slug} = %s').format(
+def like_blog(slug,username):
+    sqlquery = sql.SQL('select likes from post where {slug} = %s').format(
         slug = sql.Identifier("slug")
     )
+    cursor.execute(sqlquery,(slug,))
+    data = cursor.fetchone()[0]
+    likes = data if data else 0
+    sq = sql.SQL('update post set {likes} = %s where {slug} = %s').format(
+        likes = sql.Identifier("likes"),
+        slug = sql.Identifier("slug"))
+    cursor.execute(sq,(int(likes)+1,slug))
+    db.commit()
+
+def likeByUser(username,slug):
+    sqlquery = sql.SQL('select likes from username')
+    

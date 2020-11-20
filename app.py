@@ -26,7 +26,7 @@ def postview(slug):
         if session["login"] != sql.getAuthorUserName(slug):
                 sql.postview(slug)
         if slug in sql.slugs():
-            return render_template("postview.html", base = "baseadmin",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"])
+            return render_template("postview.html", base = "baseadmin",like = "img/liked.jpeg",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"])
         else:
             abort(404)
     else:
@@ -185,10 +185,16 @@ def logout():
     else:
         return redirect('/cplogin?redirect=cp')
 
-# @app.route("/like")
-# def like():
-#     slug = request.get_json()['slug']
-#     if "login" in session:
+@app.route("/like")
+def like():
+    slug = request.get_json()['slug']
+    if "login" in session:
+        if slug != "":
+            sql.like_blog(slug)
+            return jsonify({"work":"done"})
+    else:
+        return jsonify({"work":"not_done"})
+
 
 
 

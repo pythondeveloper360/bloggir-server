@@ -18,9 +18,7 @@
     background: none;
   }
 </style>
-
   <!-- Page Header -->
-  <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
   <header class="masthead" style="background-image: url({{url_for('static',filename = 'img/post-bg.jpg')}})">
     <div class="overlay"></div>
     <div class="container">
@@ -28,7 +26,7 @@
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
             <h1>{{post['tittle']}}</h1>
-            <h4>Likes :&nbsp;<button  onclick = "like()" id = "like">&#128077;</button> {{post['likes']}}</h4>
+            <h4>Likes :&nbsp;<button  onclick = "like()" id = "like"><img src="{{url_for('static',filename = 'img/like.jpeg')}}" width="25"></button> {{post['likes']}}</h4>
             <h4>Viewed : {{post['view']}}</h4>
 
             <span class="meta">Posted by
