@@ -250,4 +250,21 @@ def like_blog(slug,username):
 
 def likeByUser(username,slug):
     sqlquery = sql.SQL('select likes from username')
-    
+    data =  cursor.fetchone()
+    likes = data if data else []
+    if slug not in likes:
+        sqlquery = sql.SQL('update users set {likes} = %s where {username} = %s').format(
+            likes = sql.Identifier("likes"),
+            username=sql.Identifier("username"))
+        cursor.execute(sqlquery,(list(likes).append(slug),username))
+        db.commit()
+    else:
+        sqlquery = sql.SQL('update users set {likes} = %s where {username} = %s').format(
+            likes = sql.Identifier("likes"),
+            username=sql.Identifier("username"))
+        cursor.execute(sqlquery,(list(likes).remove(slug),username))
+        db.commit()
+
+
+
+
