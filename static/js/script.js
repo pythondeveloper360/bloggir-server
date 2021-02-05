@@ -59,11 +59,7 @@ function changePassword(){
 }
 like = (slug) =>{
     var xhr = new XMLHttpRequest();
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.open("POST","like",true);
-    xhr.send(JSON.stringify({
-        slug:slug
-    }));
+    
     xhr.onreadystatechange = function() {
         if (this.readyState == 4) {
             if (this.responseText == "done"){
@@ -73,6 +69,8 @@ like = (slug) =>{
                 M.toast({html:"Sign in to like blog"})
             }
     }
+    xhr.open("GET",`/like/${slug}`,true);
+    xhr.send();
   }
 }
 
@@ -83,5 +81,17 @@ like = (slug) =>{
 
 
 signup = ()=>{
+    let data = {
+        'name' : document.getElementById("name").value,
+        'uname' : document.getElementById("uname").value,
+        'email' : document.getElementById("email".value),
+        'pass' : document.getElementById("pass").value,
+        'about' : document.getElementById("about").value 
+    }
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST",'/signup',true)
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(data))
+    window.location = '/'
 
 }

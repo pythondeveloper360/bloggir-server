@@ -18,6 +18,8 @@
     background: none;
   }
 </style>
+<script src="{{url_for('static',filename = 'js/script.js')}}"></script>
+<script>console.log("post['slug']")</script>
   <!-- Page Header -->
   <header class="masthead" style="background-image: url({{url_for('static',filename = 'img/post-bg.jpg')}})">
     <div class="overlay"></div>
@@ -26,7 +28,7 @@
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
             <h1>{{post['tittle']}}</h1>
-            <h4>Likes :&nbsp;<button  onclick = "like()" id = "like"><img src="{{url_for('static',filename = 'img/like.jpeg')}}" width="25"></button> {{post['likes']}}</h4>
+            <h4>Likes :&nbsp;<button  onclick = "like(`{{post['slug']}}`)" id = "like"><img src="{{url_for('static',filename = 'img/like.jpeg')}}" width="25"></button> {{post['likes']}}</h4>
             <h4>Viewed : {{post['view']}}</h4>
 
             <span class="meta">Posted by
@@ -51,5 +53,4 @@
 
   <hr>
   <textarea name="comment" id="comment" cols="1" rows="1"></textarea>
-  <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
 {% endblock %}

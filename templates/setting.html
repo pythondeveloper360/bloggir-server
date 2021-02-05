@@ -15,6 +15,7 @@
     <form class="col s12">
       <div class="row">
         <div class="input-field col s3">
+          <form action="/setting" method="GET"></form>
           <input  id="first_name" type="text"  value = "{{data['name']}}"class="validate">
           <label for="first_name">Name</label>
         </div>
@@ -24,6 +25,8 @@
         <div class="input-field col s5">
           <textarea id="textarea1" class="materialize-textarea">{{data['about']}}</textarea>
           <label for="textarea1">About</label>
+          <input type="submit" value="Submit">
+        </form>
         </div>
       </div>
       <div class="card light-green lighten-5">

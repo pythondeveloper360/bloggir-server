@@ -136,17 +136,13 @@ def delete(slug):
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        name = request.form.get('name')
-        username = request.form.get('uname')
-        email = request.form.get('email')
-        password = request.form.get('pass')
-        about = request.form.get("about")
-        work = sql.signUpUser(name, email, username, password,about)
+        data = request.get_json()
+        work = sql.signUpUser(data['name'], data['email'], data['uname'],data['pass'],data['about'])
         if work:
-            return redirect("/cplogin")
+            print("dadasd")
+            return jsonify({'work':'done'})
         else:
-            flash("Username exists")
-            return redirect("/signup")
+            return jsonify({'work':'not'})
 
     return render_template("signup.html", tittle='SignUp for Bloggir')
 
@@ -185,12 +181,11 @@ def logout():
     else:
         return redirect('/cplogin?redirect=cp')
 
-@app.route("/like")
-def like():
-    slug = request.get_json()['slug']
+@app.route("/like/<slug>")
+def like(slug):
     if "login" in session:
         if slug != "":
-            sql.like_blog(slug)
+            sql.like_blog(slug,session['login'])
             return jsonify({"work":"done"})
     else:
         return jsonify({"work":"not_done"})
