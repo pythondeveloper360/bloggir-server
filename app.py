@@ -155,9 +155,8 @@ def setting():
         return redirect("/cplogin?redirect=setting")
     if request.method == "POST":
         if "login" in session:
-            name = request.form.get("name")
-            about = request.form.get("about")
-            sql.editprofile(session["login"],name,about)
+            data = request.get_json()
+            sql.editprofile(session["login"],data['name'],data['about'])
             return jsonify("Done")
 
 

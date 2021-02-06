@@ -95,3 +95,15 @@ signup = ()=>{
     window.location = '/'
 
 }
+
+let setting = ()=>{
+    let data = {
+        "name":document.getElementById("name").value,
+        "about":document.getElementById("textarea1").value
+    }
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST','/setting',true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(data));
+
+}
