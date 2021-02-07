@@ -180,11 +180,11 @@ def logout():
     else:
         return redirect('/cplogin?redirect=cp')
 
-@app.route("/like/<slug>")
+@app.route("/like/<slug>",methods = ["POST"])
 def like(slug):
     if "login" in session:
         if slug != "":
-            sql.like_blog(slug,session['login'])
+            sql.add_like(session['login'],slug)
             return jsonify({"work":"done"})
     else:
         return jsonify({"work":"not_done"})

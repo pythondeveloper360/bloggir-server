@@ -59,19 +59,9 @@ function changePassword(){
 }
 like = (slug) =>{
     var xhr = new XMLHttpRequest();
-    
-    xhr.onreadystatechange = function() {
-        if (this.readyState == 4) {
-            if (this.responseText == "done"){
-                M.toast({html:"Added to likes"})
-            }
-            else if (this.responseText == "not done"){
-                M.toast({html:"Sign in to like blog"})
-            }
-    }
-    xhr.open("GET",`/like/${slug}`,true);
+    xhr.open("POST",`/like/${slug}`,true);
     xhr.send();
-  }
+    
 }
 
 
