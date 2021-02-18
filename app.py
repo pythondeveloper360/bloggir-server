@@ -70,7 +70,7 @@ def new_post():
 @app.route("/cp", methods=['GET'])
 def cp():
     if "login" in session:
-        return render_template("cp.html", posts=sql.readAllPostsByAuthor(session["login"]), year=datetime.now().year, tittle='Control Pannel', user=session['login'])
+        return render_template("cp.html", posts=sql.readAllPostsByAuthor(session["login"]), year=datetime.now().year, tittle='Control Pannel', page_tittle='Control Pannel', user=session['login'])
     else:
         return redirect("/cplogin?redirect=cp")
 

@@ -6,7 +6,6 @@ console.log(like,liked)
 function deletePost(slug){
     var con = confirm("Are you sure you want to delete "+slug)
     if (con){
-        console.log("dsdfsd")
         var xhr =   new XMLHttpRequest();
         xhr.open("POST","/delete/" + slug ,true);
         xhr.send()
