@@ -2573,8 +2573,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #80e5ff;
+  border-color: #80e5ff;
 }
 
 .btn-primary:hover {
@@ -4280,8 +4280,8 @@ input[type="button"].btn-block {
 }
 
 .nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
-  border-color: #e9ecef #e9ecef #dee2e6;
-}
+  border-color: #1d1e1f #e9ecef #dee2e6;
+} 
 
 .nav-tabs .nav-link.disabled {
   color: #6c757d;

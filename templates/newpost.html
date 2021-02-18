@@ -3,35 +3,41 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css')}}" />
+	<link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css')}}" />
+	<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+
     <title>New Post</title>
 </head>
 <body>
-<div id = 'div'>
-<form action="/newpost" method="POST">
-	<label for="tittle">Tittle</label>
-		
-	<input type="text" class = 'text' name="tittle" id="tittle">
-    <br>
-    <label for="slug">Slug</label>
-	
-	<input type="slug" name="slug" class = 'text'id="slug">
-	<br>
-	<label for="tagline">Tagline</label>
-	
-	<input type="text" name="tagline" class = 'text'id="tagline">
-	<br>
-	<br>
-	<label for="content">Content</label>
-	<br>
+<script src="{{url_for('static',filename = 'js/script.js')}}"></script>
 
-	<textarea name="content" id="content" class = 'textarea'></textarea>
-	<div class = "postdiv">
-	<button type="submit"  class="postbtn">Post</button>
-	</div>
+	<div id = 'newpost'>
+		<form action="/newpost" method="POST">
+			<label for="tittle">Tittle</label>
+				
+			<input type="text" class = 'text' name="tittle" id="tittle">
+			<br>
+			<label for="slug">Slug</label>
+			
+			<input type="slug" name="slug" class = 'text'id="slug">
+			<br>
+			<label for="tagline">Tagline</label>
+			
+			<input type="text" name="tagline" class = 'text'id="tagline">
+			<br>
+			<br>
+			<label for="content">Content</label>
+			<br>
 
-</form>	
+			<textarea name="content" id="content" class = 'textarea'></textarea>
+			<script>CKEDITOR.replace("content");</script>
+			<div class = "postdiv">
+			<button type="submit"  class="postbtn">Post</button>
+			</div>
+
+		</form>	
 </div>
+
 <br>
 </body>
 </html>

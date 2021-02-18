@@ -1,3 +1,8 @@
+let liked = `{{url_for('static',filename = 'img/liked.png')}}`
+let like = `{{url_for('static',filename = 'img/like.png')}}`
+console.log(like,liked)
+
+
 function deletePost(slug){
     var con = confirm("Are you sure you want to delete "+slug)
     if (con){
@@ -57,14 +62,6 @@ function changePassword(){
     };
     }
 }
-like = (slug) =>{
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST",`/like/${slug}`,true);
-    xhr.send();
-    
-}
-
-
 
 
 
@@ -85,6 +82,13 @@ signup = ()=>{
     window.location = '/'
 
 }
+let signin = (redirect) =>{
+    let co = confirm('You are not signed in do you want to sign in ?')
+    if (co == true){
+        window.location = redirect;
+    }
+    
+}
 
 let setting = ()=>{
     let data = {
@@ -97,3 +101,4 @@ let setting = ()=>{
     xhr.send(JSON.stringify(data));
 
 }
+let comment = (slug,) => {}

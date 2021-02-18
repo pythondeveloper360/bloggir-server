@@ -46,13 +46,12 @@ id,tittle,tagline,content,slug,date,author,authorusername
 
 def readAllPosts():
     array = []
-    sqlquery = sql.SQL("SELECT * FROM post")
+    sqlquery = sql.SQL('SELECT * FROM post')
     cursor.execute(sqlquery)
     data = cursor.fetchall()
     # print(data)
     for i in range(len(data)):
-        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], content=data[i]
-                        [3], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
+        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
     return array
 
 
@@ -97,13 +96,12 @@ def slugs():
 
 def readAllPostsByAuthor(authorusername):
     array = []
-    sqlquery = sql.SQL('SELECT * FROM post where {authorusername} = %s;').format(
+    sqlquery = sql.SQL('SELECT * FROM post where {authorusername} = %s').format(
         authorusername=sql.Identifier("authorusername"))
     cursor.execute(sqlquery, (authorusername,))
     data = cursor.fetchall()
     for i in range(len(data)):
-        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], content=data[i]
-                    [3], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
+        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
     return array
 
 def postview(slug):
@@ -235,7 +233,7 @@ def changePassword(userName, oldPassword, newPassword):
             return True
     else:
         return False
-def like_blog(slug,username):
+def like_blog(slug):
     sqlquery = sql.SQL('select likes from post where {slug} = %s').format(
         slug = sql.Identifier("slug")
     )
@@ -248,12 +246,26 @@ def like_blog(slug,username):
     cursor.execute(sq,(int(likes)+1,slug))
     db.commit()
 
+def unlike_blog(slug):
+    sqlquery = sql.SQL('select likes from post where {slug} = %s').format(
+        slug = sql.Identifier("slug")
+    )
+    cursor.execute(sqlquery,(slug,))
+    data = cursor.fetchone()[0]
+    likes = data if data else 0
+    sq = sql.SQL('update post set {likes} = %s where {slug} = %s').format(
+        likes = sql.Identifier("likes"),
+        slug = sql.Identifier("slug"))
+    cursor.execute(sq,(int(likes)-1,slug))
+    db.commit()
+
+
 
 def get_likes(username):
     sqlquery = sql.SQL('select likes from users where {username} = %s').format(username = sql.Identifier("username"))
     cursor.execute(sqlquery,(username,))
     data = cursor.fetchone()[0]
-    return (list(data))
+    return (list(data) if data else None)
 def add_like(username,slug):
     likes = get_likes(username)
     if slug not  in likes:
@@ -263,6 +275,7 @@ def add_like(username,slug):
             username = sql.Identifier("username"))
         cursor.execute(sqlquery,(likes,username))
         db.commit()
+        like_blog(slug)
     else:
         likes.remove(slug)
         sqlquery = sql.SQL('update users set {likes} = %s where {username} = %s').format(
@@ -270,5 +283,23 @@ def add_like(username,slug):
             username = sql.Identifier("username"))
         cursor.execute(sqlquery,(likes,username))
         db.commit()
+        unlike_blog(slug)
 
+def check_liked_by_user(username,slug):
+    sqlquery = sql.SQL('select likes from users where {username} = %s').format(username = sql.Identifier("username"))
+    cursor.execute(sqlquery,(username,))
+    data = cursor.fetchone()[0]
+    if slug in data:
+        return True
+    else:
+        return False
 
+def add_comment(slug,username,comment,date):
+    sqlquery = sql.SQL('select comment from post where {slug} = %s').format(slug = sql.Identifier("slug"))
+    cursor.execute(sqlquery,(slug,))
+    commentdata = cursor.fetchone()[0]
+    sqlquery = sql.SQL('select comment_no from post where {slug} = %s').format(slug = sql.Identifier("slug"))
+    cursor.execute(sqlquery,(slug,))
+    commentno = cursor.fetchone()[0]
+    print(commentdata,commentno)
+    

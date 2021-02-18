@@ -15,10 +15,11 @@ def home():
     return render_template("index.html",base = "base" ,posts=sql.readAllPosts()[::-1], year=datetime.now().year, page_tittle='Bloggir')
 
 
-@app.route("/post")
+@app.route("/allposts")
 def post():
-    return render_template("post.html", posts=sql.readAllPosts()[::-1], le=len(sql.readAllPosts()), year=datetime.now().year, tittle='All Posts in Bloggir')
-
+    if 'login' in session:
+        return render_template("post.html", posts=sql.readAllPosts()[::-1], base = 'baseadmin',le=len(sql.readAllPosts()), year=datetime.now().year, page_tittle='All Posts in Bloggir')
+    return render_template("post.html", posts=sql.readAllPosts()[::-1], base = 'base',le=len(sql.readAllPosts()), year=datetime.now().year, page_tittle='All Posts in Bloggir')
 
 @app.route("/post/<slug>")
 def postview(slug):
@@ -26,13 +27,13 @@ def postview(slug):
         if session["login"] != sql.getAuthorUserName(slug):
                 sql.postview(slug)
         if slug in sql.slugs():
-            return render_template("postview.html", base = "baseadmin",like = "img/liked.jpeg",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"])
+            return render_template("postview.html", base = "baseadmin",login_user = session['login'],like = sql.check_liked_by_user(session['login'],slug),post=sql.readPostBySlug(slug),login = True ,content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"])
         else:
             abort(404)
     else:
         if slug in sql.slugs():
 
-            return render_template("postview.html", base = "base",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"])
+            return render_template("postview.html", base = "base",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year,login  =False, page_tittle=sql.readPostBySlug(slug)["tittle"])
         else:
             abort(404)
 
@@ -42,7 +43,7 @@ def mypost():
     if 'login' in session:
         le = len(sql.readAllPostsByAuthor(session['login']))
         le = le if le else "No post yet"
-        return render_template("post.html",base = "baseadmin", posts=sql.readAllPostsByAuthor(session['login'])[::-1], le=le, year=datetime.now().year, tittle="All Posts by {}".format(sql.getNameFromUserName(session['login'])))
+        return render_template("post.html",base = "baseadmin", posts=sql.readAllPostsByAuthor(session['login'])[::-1], le=le, year=datetime.now().year, page_tittle="All Posts by {}".format(sql.getNameFromUserName(session['login'])))
 
     else:
         return redirect('/cplogin?redirect=mypost')
@@ -57,7 +58,7 @@ def new_post():
             tagline = request.form.get('tagline')
             content = request.form.get('content')
             name = sql.getNameFromUserName(session['login'])
-            work = sql.insertPost(tittle, tagline, content, slug,
+            sql.insertPost(tittle, tagline, content, slug,
                         date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
             return redirect('/cp')
         else:
@@ -189,7 +190,10 @@ def like(slug):
     else:
         return jsonify({"work":"not_done"})
 
-
+@app.route('/comment',methods = ['POST'])
+def comment_create():
+    data = request.get_json()
+    
 
 
 

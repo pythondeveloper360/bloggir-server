@@ -1,11 +1,12 @@
-{% extends "baseadmin.html" %}
-{% block body %}<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css')}}" />
 	<script src="{{url_for('static',filename = 'js/script.js')}}"></script>
+	<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+
 	<title>{{post['tittle']}}</title>
 </head>
 <body>
@@ -23,6 +24,7 @@
 	<br>
 	<label for="content">Content</label>
 	<textarea name="content" id="content" class = 'textarea'>{{post['content']}}</textarea>
+	<script>CKEDITOR.replace('content')</script>
 
 </form>	
 </div>
@@ -31,7 +33,7 @@
 </body>
 </html>
 
-{% endblock %}
+
 
 
 

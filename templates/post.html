@@ -3,20 +3,20 @@
 {%  else %}
   {% extends "base.html" %}
 {%endif%}
-
 {% block body %}
-<link rel = "icon" href="{{url_for('static',filename = 'img/blog.png')}}" type = "image/x-icon">
 
+<link rel = "icon" href="{{url_for('static',filename = 'img/blog.png')}}" type = "image/x-icon">
+<script>console.log('{{page_tittle}}')</script>
 
   <!-- Page Header -->
 
 <header class="masthead" style="background-image: url({{url_for('static',filename = 'img/post-bg.jpg')}})">
+  <span class="meta">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <span class="meta">
               <h2>Posts</h2>
               <br>
               <h3>{{le}}</h3></span>

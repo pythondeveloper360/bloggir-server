@@ -6,8 +6,15 @@
 {{base}}
 {% block body %}
 <style>
+  .commentarea{
+  margin:10px;
+  }
+  #commentbtn{
+    position: relative;
+    top: -20px;
+  }
   #comment{
-    margin-left: 80;
+    margin-left: 10%;
     margin-right: 80;
     padding: 10px;
     width: 70%;
@@ -15,11 +22,26 @@
   }
   #like{
     border: none;
-    background: none;
+    background: transparent;
   }
 </style>
 <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
-<script>console.log("post['slug']")</script>
+<script>
+  like = (slug) =>{
+    var i = document.getElementById('likeimg').src;
+    if (i.search("liked") != -1 ){
+        document.getElementById('likeimg').src = "{{url_for('static',filename = 'img/like.png')}}"
+    }
+    else{
+        document.getElementById('likeimg').src = "{{url_for('static',filename = 'img/liked.png')}}"
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST",`/like/${slug}`,true);
+    xhr.send();
+    
+}
+
+</script>
   <!-- Page Header -->
   <header class="masthead" style="background-image: url({{url_for('static',filename = 'img/post-bg.jpg')}})">
     <div class="overlay"></div>
@@ -28,7 +50,7 @@
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
             <h1>{{post['tittle']}}</h1>
-            <h4>Likes :&nbsp;<button  onclick = "like(`{{post['slug']}}`)" id = "like"><img src="{{url_for('static',filename = 'img/like.jpeg')}}" width="25"></button> {{post['likes']}}</h4>
+            <h4>Likes :&nbsp;<span  onclick = "like(`{{post['slug']}}`)" id = "like"><img src="{{url_for('static',filename = 'img/like.png')}}" id = "likeimg" width="25"></span> {{post['likes']}}</h4>
             <h4>Viewed : {{post['view']}}</h4>
 
             <span class="meta">Posted by
@@ -52,5 +74,15 @@
   </article>
 
   <hr>
-  <textarea name="comment" id="comment" cols="1" rows="1"></textarea>
+  {%if login%}
+    <div class="commentarea">
+      <textarea name="comment" id="comment" cols="1" rows="1"></textarea>
+      <button id = 'commentbtn' class = 'btn btn-primary'>Comment</button>
+    </div>
+  {%else%}
+    <div class="commentarea">
+      <textarea name="comment" id="comment" cols="1" rows="1"></textarea>
+      <button onclick="signin(`/cplogin?redirect=post/{{post['slug']}}`);" id = 'commentbtn' class = 'btn btn-primary'>Comment</button>
+    </div>
+  {%endif%}
 {% endblock %}
