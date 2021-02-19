@@ -193,6 +193,9 @@ def like(slug):
 @app.route('/comment',methods = ['POST'])
 def comment_create():
     data = request.get_json()
+    print(data)
+    return jsonify({"word":""})
+    
     
 
 

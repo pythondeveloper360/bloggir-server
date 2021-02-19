@@ -100,4 +100,16 @@ let setting = ()=>{
     xhr.send(JSON.stringify(data));
 
 }
-let comment = (slug,) => {}
+let comment = (slug) => {
+    let d = new Date();
+    if (document.getElementById('comment').value){
+    let data = {
+        "comment" : document.getElementById('comment').value,
+        "date": `${d.getDate()}:${d.getMonth()}:${d.getFullYear()}`
+    }
+    let xhr = new XMLHttpRequest()
+    xhr.open('POST',"/comment",true)
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(data))
+    }
+}

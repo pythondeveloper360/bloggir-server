@@ -301,5 +301,10 @@ def add_comment(slug,username,comment,date):
     sqlquery = sql.SQL('select comment_no from post where {slug} = %s').format(slug = sql.Identifier("slug"))
     cursor.execute(sqlquery,(slug,))
     commentno = cursor.fetchone()[0]
-    print(commentdata,commentno)
     
+def getComment(slug):
+    sqlquery = sql.SQL('select comment from post where {slug} = %s').format(slug = sql.Identifier("slug"))
+    cursor.execute(sqlquery,(slug,))
+    data = cursor.fetchone()[0]
+    data = data if data else []
+    return data
