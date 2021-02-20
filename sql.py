@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2 import sql
 import json
 import os
-
+import utils
 
 db = psycopg2.connect(
     user='xubuuanpszwwcx',
@@ -294,17 +294,27 @@ def check_liked_by_user(username,slug):
     else:
         return False
 
-def add_comment(slug,username,comment,date):
-    sqlquery = sql.SQL('select comment from post where {slug} = %s').format(slug = sql.Identifier("slug"))
-    cursor.execute(sqlquery,(slug,))
-    commentdata = cursor.fetchone()[0]
-    sqlquery = sql.SQL('select comment_no from post where {slug} = %s').format(slug = sql.Identifier("slug"))
-    cursor.execute(sqlquery,(slug,))
-    commentno = cursor.fetchone()[0]
+# def add_comment(slug,username,comment,date):
+#     sqlquery = sql.SQL('select comment from post where {slug} = %s').format(slug = sql.Identifier("slug"))
+#     cursor.execute(sqlquery,(slug,))
+#     commentdata = cursor.fetchone()[0]
+#     sqlquery = sql.SQL('select comment_no from post where {slug} = %s').format(slug = sql.Identifier("slug"))
+#     cursor.execute(sqlquery,(slug,))
+#     commentno = cursor.fetchone()[0]
     
 def getComment(slug):
     sqlquery = sql.SQL('select comment from post where {slug} = %s').format(slug = sql.Identifier("slug"))
     cursor.execute(sqlquery,(slug,))
-    data = cursor.fetchone()[0]
-    data = data if data else []
+    data = cursor.fetchone()
+    data = data[0] if data else []
+    return utils.JsonStr(data)
+def get_id(slug):
+    sqlquery = sql.SQL('select comment_no from post where {slug} = %s').format(slug = sql.Identifier("slug"))
+    cursor.execute(sqlquery,(slug,))
+    data = cursor.fetchone()
+    data = data[0] if data else 0
     return data
+
+def add_comment(slug,username,commment_text,date):
+    id = ''
+    comments = ''
