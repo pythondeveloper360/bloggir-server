@@ -41,3 +41,5 @@ class JsonStr:
             return self.strarr
         else:
             return []
+
+    

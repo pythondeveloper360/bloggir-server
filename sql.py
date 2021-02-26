@@ -11,14 +11,14 @@ db = psycopg2.connect(
     port='5432',
     database='dffngl3u0qkkld'
 )
-# db = psycopg2.connect(user = "postgres",
+# db = psycopg2.connect(user = "hanzala",
 #                       password = 'qsa-1299',
 #                       host = "localhost",
 #                       port = '5432',
-#                       database = 'postgres'  )
+#                       database = 'mydb'  )
 cursor = db.cursor()
 
-""""
+"""
     |Post|
 
     Id
@@ -46,12 +46,12 @@ id,tittle,tagline,content,slug,date,author,authorusername
 
 def readAllPosts():
     array = []
-    sqlquery = sql.SQL('SELECT * FROM post')
+    sqlquery = sql.SQL('SELECT id,tittle,tagline,slug,date,author FROM post')
     cursor.execute(sqlquery)
     data = cursor.fetchall()
     # print(data)
     for i in range(len(data)):
-        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
+        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], slug=data[i][3], date=data[i][4], author=data[i][5]))
     return array
 
 
@@ -74,8 +74,7 @@ def insertPost(tittle, tagline, content, slug, date, author, authorusername):
 
 
 def readPostBySlug(slug):
-    sqlquery = sql.SQL(
-        'SELECT * FROM post where {slug} = %s;').format(slug=sql.Identifier("slug"))
+    sqlquery = sql.SQL('SELECT id,tittle,tagline,content,slug,date,author,authorusername,view,likes FROM post where {slug} = %s;').format(slug=sql.Identifier("slug"))
     cursor.execute(sqlquery, (slug,))
     data = cursor.fetchone()
     return dict(id=data[0], tittle=data[1], tagline=data[2], content=data[3],
@@ -96,12 +95,12 @@ def slugs():
 
 def readAllPostsByAuthor(authorusername):
     array = []
-    sqlquery = sql.SQL('SELECT * FROM post where {authorusername} = %s').format(
+    sqlquery = sql.SQL('SELECT id,tittle,tagline,slug,date,author,authorusername FROM post where {authorusername} = %s').format(
         authorusername=sql.Identifier("authorusername"))
     cursor.execute(sqlquery, (authorusername,))
     data = cursor.fetchall()
     for i in range(len(data)):
-        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], slug=data[i][4], date=data[i][5], author=data[i][6], authorusername=data[i][7]))
+        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], slug=data[i][3], date=data[i][4], author=data[i][5], authorusername=data[i][6]))
     return array
 
 def postview(slug):
@@ -288,12 +287,14 @@ def add_like(username,slug):
 def check_liked_by_user(username,slug):
     sqlquery = sql.SQL('select likes from users where {username} = %s').format(username = sql.Identifier("username"))
     cursor.execute(sqlquery,(username,))
-    data = cursor.fetchone()[0]
-    if slug in data:
-        return True
-    else:
+    data = cursor.fetchone()
+    try:
+        if slug in data:
+            return True
+        else:
+            return False
+    except:
         return False
-
 # def add_comment(slug,username,comment,date):
 #     sqlquery = sql.SQL('select comment from post where {slug} = %s').format(slug = sql.Identifier("slug"))
 #     cursor.execute(sqlquery,(slug,))
@@ -313,8 +314,25 @@ def get_id(slug):
     cursor.execute(sqlquery,(slug,))
     data = cursor.fetchone()
     data = data[0] if data else 0
-    return data
+    return int(data) 
+
+def increment_id(slug):
+    id = get_id(slug)+1
+    sqlquery = sql.SQL('update post set {comment_no} = %s where {slug} = %s').format(
+        comment_no = sql.Identifier("comment_no"),
+        slug = sql.Identifier("slug"))
+    cursor.execute(sqlquery,(id,slug))
+    db.commit()
+
 
 def add_comment(slug,username,commment_text,date):
-    id = ''
-    comments = ''
+    # id = get_id(slug)
+    id = 1
+    comments = getComment(slug)
+    comments.add_comment(id,username,commment_text,date)
+    sqlquery = sql.SQL('update post set {comment} = %s where {slug} = %s').format(
+        comment = sql.Identifier("comment"),
+        slug = sql.Identifier("slug"))
+    cursor.execute(sqlquery,(comments.to_string(),slug))
+    db.commit()
+    # increment_id(slug)

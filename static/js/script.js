@@ -1,6 +1,5 @@
 let liked = `{{url_for('static',filename = 'img/liked.png')}}`
 let like = `{{url_for('static',filename = 'img/like.png')}}`
-console.log(like,liked)
 
 
 function deletePost(slug){
@@ -107,9 +106,22 @@ let comment = (slug) => {
         "comment" : document.getElementById('comment').value,
         "date": `${d.getDate()}:${d.getMonth()}:${d.getFullYear()}`
     }
+    
     let xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4){
+            $('.commentsBox').append(
+                `<div class="onecomment">
+                    <div class='nameAndDate'><b>${login_user}</b><small> on ${data.date}</small></div>
+                    <div class='commentText'><blockquote>${data.comment}</blockquote></div>
+                 </div>`
+            )
+        }
+    }
     xhr.open('POST',"/comment",true)
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(data))
+    
     }
+    
 }

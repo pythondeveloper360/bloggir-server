@@ -1,88 +1,125 @@
 {% if base == "baseadmin"%}
-  {% extends "baseadmin.html" %}
-{%  else %}
-  {% extends "base.html" %}
+{% extends "baseadmin.html" %}
+{% else %}
+{% extends "base.html" %}
 {%endif%}
 {{base}}
 {% block body %}
 <style>
-  .commentarea{
-  margin:10px;
+    textarea{
+      width : 50%
+    } 
+    .name{
+        }
+    .commentText{
+      margin-left: 5em;
+    }
+  
+  .onecomment {
+    width : 80%;
+    position: relative;
+    left:11%;
+    border-style: solid;
+    border-bottom: black;
+    margin-top: 10px;
   }
-  #commentbtn{
+
+  .commentarea {
+    margin: 10px;
+  }
+
+  #commentbtn {
     position: relative;
     top: -20px;
   }
-  #comment{
+  .commentsBox{
+    padding:10px;
+  }
+  #comment {
     margin-left: 10%;
     margin-right: 80;
     padding: 10px;
     width: 70%;
     font-size: large;
   }
-  #like{
+
+  #like {
     border: none;
     background: transparent;
   }
 </style>
+<script>
+let login_user = `{{login_user}}` 
+</script>
 <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
 <script>
-  like = (slug) =>{
+  like = (slug) => {
     var i = document.getElementById('likeimg').src;
-    if (i.search("liked") != -1 ){
-        document.getElementById('likeimg').src = "{{url_for('static',filename = 'img/like.png')}}"
+    if (i.search("liked") != -1) {
+      document.getElementById('likeimg').src = "{{url_for('static',filename = 'img/like.png')}}"
     }
-    else{
-        document.getElementById('likeimg').src = "{{url_for('static',filename = 'img/liked.png')}}"
+    else {
+      document.getElementById('likeimg').src = "{{url_for('static',filename = 'img/liked.png')}}"
     }
     var xhr = new XMLHttpRequest();
-    xhr.open("POST",`/like/${slug}`,true);
+    xhr.open("POST", `/like/${slug}`, true);
     xhr.send();
-    
-}
+
+  }
 
 </script>
-  <!-- Page Header -->
-  <header class="masthead" style="background-image: url({{url_for('static',filename = 'img/post-bg.jpg')}})">
-    <div class="overlay"></div>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-heading">
-            <h1>{{post['tittle']}}</h1>
-            <h4>Likes :&nbsp;<span  onclick = "like(`{{post['slug']}}`)" id = "like"><img src="{{url_for('static',filename = 'img/like.png')}}" id = "likeimg" width="25"></span> {{post['likes']}}</h4>
-            <h4>Viewed : {{post['view']}}</h4>
+<!-- Page Header -->
+<header class="masthead" style="background-image: url({{url_for('static',filename = 'img/post-bg.jpg')}})">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>{{post['tittle']}}</h1>
+          <h4>Likes :&nbsp;<span onclick="like(`{{post['slug']}}`)" id="like"><img
+                src="{{url_for('static',filename = 'img/like.png')}}" id="likeimg" width="25"></span> {{post['likes']}}
+          </h4>
+          <h4>Viewed : {{post['view']}}</h4>
 
-            <span class="meta">Posted by
-              {{post['author']}}
-              on {{post['date']}}</span>
-          </div>
+          <span class="meta">Posted by
+            {{post['author']}}
+            on {{post['date']}}</span>
         </div>
       </div>
     </div>
-  </header>
+  </div>
+</header>
 
-  <!-- Post Content -->
-  <article>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          {{content}}
-        </div>
+<!-- Post Content -->
+<article>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        {{content}}
       </div>
     </div>
-  </article>
+  </div>
+</article>
 
-  <hr>
-  {%if login%}
-    <div class="commentarea">
-      <textarea name="comment" id="comment" onclick = 'comment()' cols="1" rows="1"></textarea>
-      <button id = 'commentbtn' class = 'btn btn-primary'>Comment</button>
-    </div>
-  {%else%}
-    <div class="commentarea">
-      <textarea name="comment" id="comment" cols="1" rows="1"></textarea>
-      <button onclick="signin(`/cplogin?redirect=post/{{post['slug']}}`);" id = 'commentbtn' class = 'btn btn-primary'>Comment</button>
-    </div>
-  {%endif%}
+<hr>
+{%if login%}
+<div class="commentInputArea" id = "commentarea">
+  <textarea name="comment" id="comment"  cols="1" rows="1"></textarea>
+  <button id='commentbtn' onclick="comment('{{post['slug']}}')" class='btn btn-primary'>Comment</button>
+</div>
+{%else%}
+<div class="commentarea">
+  <textarea name="commentInputArea" id="comment" cols="1" rows="1"></textarea>
+  <button onclick="signin(`/cplogin?redirect=post/{{post['slug']}}`);" id='commentbtn' class='btn btn-primary'>Comment</button>
+</div>
+{%endif%}
+<div class="commentsBox">
+  {% for comm in comments%}
+      <div class="onecomment">
+        <div class='nameAndDate'><b>{{comm['username']}}</b> <small> on 12-12-12</small> </div>
+        <div class='commentText'><blockquote>{{comm['comment']}}</blockquote></div>
+      </div>
+  {% endfor %}
+</div>
+
 {% endblock %}

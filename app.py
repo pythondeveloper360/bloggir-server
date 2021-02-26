@@ -27,13 +27,13 @@ def postview(slug):
         if session["login"] != sql.getAuthorUserName(slug):
                 sql.postview(slug)
         if slug in sql.slugs():
-            return render_template("postview.html", base = "baseadmin",login_user = session['login'],like = sql.check_liked_by_user(session['login'],slug),post=sql.readPostBySlug(slug),login = True ,content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"])
+            return render_template("postview.html", url = f'/post/{slug}',base = "baseadmin",login_user = session['login'],like = sql.check_liked_by_user(session['login'],slug),post=sql.readPostBySlug(slug),login = True ,content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"],comments = sql.getComment(slug).repr())
         else:
             abort(404)
     else:
         if slug in sql.slugs():
 
-            return render_template("postview.html", base = "base",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year,login  =False, page_tittle=sql.readPostBySlug(slug)["tittle"])
+            return render_template("postview.html", url = f'/post{slug}', base = "base",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year,login  =False, page_tittle=sql.readPostBySlug(slug)["tittle"],comments = sql.getComment(slug).repr())
         else:
             abort(404)
 
@@ -58,6 +58,11 @@ def new_post():
             tagline = request.form.get('tagline')
             content = request.form.get('content')
             name = sql.getNameFromUserName(session['login'])
+            print('tittle = ',tittle)
+            print('slug = ',slug)
+            print('tag = ',tagline)
+            print('cont = ',content)
+            
             sql.insertPost(tittle, tagline, content, slug,
                         date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
             return redirect('/cp')
