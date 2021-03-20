@@ -116,7 +116,7 @@ let login_user = `{{login_user}}`
 <div class="commentsBox">
   {% for comm in comments%}
       <div class="onecomment">
-        <div class='nameAndDate'><b>{{comm['username']}}</b> <small> on 12-12-12</small> </div>
+        <div class='nameAndDate'><b>{{comm['username']}}</b> <small> on {{comm['date']}}</small> </div>
         <div class='commentText'><blockquote>{{comm['comment']}}</blockquote></div>
       </div>
   {% endfor %}

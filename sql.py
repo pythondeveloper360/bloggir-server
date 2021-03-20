@@ -313,7 +313,7 @@ def get_id(slug):
     sqlquery = sql.SQL('select comment_no from post where {slug} = %s').format(slug = sql.Identifier("slug"))
     cursor.execute(sqlquery,(slug,))
     data = cursor.fetchone()
-    data = data[0] if data else 0
+    data = data[0] if data[0] != None else 0
     return int(data) 
 
 def increment_id(slug):
@@ -326,8 +326,7 @@ def increment_id(slug):
 
 
 def add_comment(slug,username,commment_text,date):
-    # id = get_id(slug)
-    id = 1
+    id = get_id(slug)
     comments = getComment(slug)
     comments.add_comment(id,username,commment_text,date)
     sqlquery = sql.SQL('update post set {comment} = %s where {slug} = %s').format(
@@ -335,4 +334,4 @@ def add_comment(slug,username,commment_text,date):
         slug = sql.Identifier("slug"))
     cursor.execute(sqlquery,(comments.to_string(),slug))
     db.commit()
-    # increment_id(slug)
+    increment_id(slug)

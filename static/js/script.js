@@ -118,7 +118,7 @@ let comment = (slug) => {
             )
         }
     }
-    xhr.open('POST',"/comment",true)
+    xhr.open('POST',`/comment/${slug}`,true)
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(data))
     

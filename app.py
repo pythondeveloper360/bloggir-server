@@ -197,10 +197,10 @@ def like(slug):
     else:
         return jsonify({"work":"not_done"})
 
-@app.route('/comment',methods = ['POST'])
-def comment_create():
+@app.route('/comment/<slug>',methods = ['POST'])
+def comment_create(slug):
     data = request.get_json()
-    print(data)
+    sql.add_comment(slug,session['login'],data['comment'],data['date'])
     return jsonify({"word":""})
     
     
