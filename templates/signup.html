@@ -1,60 +1,43 @@
+
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
-    <title>Setting</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
-</head>
-<div class = "container">
-  <div class="row">
-    <div class="col s12 m6">
-      <div class="card blue darken-4">
-        <div class="card-content blue lighten-4">
-          <span class="card-title">Sign Up</span>
-            <div class="row">
-              <form class="col s12">
-                <div class="row">
-                  <div class="input-field col s6">
-                    <input id="name" name = "name" type="text" class="validate">
-                    <label for="name">First Name</label>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="input-field col s6">
-                    <input  id="uname" name = "uname"type="text" class="validate">
-                    <label for="uname">User Name</label>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="input-field col s10">
-                    <input id="email" name = "email"type="email" class="validate">
-                    <label for="email">Email</label>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="input-field col s10">
-                    <input id="pass" name = "pass" type="password" class="validate">
-                    <label for="pass">Password</label>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="input-field col s12">
-                    <textarea id="about" class="materialize-textarea"></textarea>
-                    <label for="about">About</label>
-                  </div>
-                </div>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-              </form>
-            </div>
+    <title>Sign In to Bloggir </title>
 
-        </div>
-        <div class="card-action blue lighten-4">
-          <a class="waves-effect waves-light btn" onclick="signup()">Signup</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
+    <link rel = "icon" href="{{url_for('static',filename = 'img/login.png')}}" type = "image/x-icon">
+    <!-- Bootstrap core CSS -->
+    <link href="{{url_for('static',filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{url_for('static',filename = 'css/signin.css')}}" rel="stylesheet">
+  </head>
+  {% for message in get_flashed_messages() %}
+  <script>alert('{{message}}')</script>  
+  {% endfor %}
+  <body class="text-center">
+    <form class="form-signin" action="/signup" method="post">
+      <img class="mb-4" src="{{url_for('static',filename = 'img/login.png')}}" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Sign Up for Bloggir</h1>
+      <label for="name" class="sr-only">Name</label>
+      <input type="text" id="name" class="form-control" name = "name" placeholder="Name" required autofocus>
+      
+      <label for="inputEmail" class="sr-only">Email address</label>
+      <input type="text" id="uname" class="form-control" name = "uname" placeholder="Email address" required >
+      
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="pass" class="form-control" name = "pass" placeholder="Password" required>
+
+      <label for="about" class="sr-only">About</label>
+      <textarea name="about"  style = "margin-bottom:10px!important;" class = 'form-control'id="about"></textarea>
+
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+    </form>
+  </body>
+</html>

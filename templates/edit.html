@@ -12,7 +12,7 @@
 <body>
 
 <div id = 'div' style = "position: sticky;top:1;">
-<form action="">
+<form action="/edit/{{post['slug']}}" method="POST">
 	<label for="tittle">Tittle</label>
 	
 	<input type="text" name="tittle" value = "{{post['tittle']}}" id="tittle">
@@ -25,11 +25,11 @@
 	<label for="content">Content</label>
 	<textarea name="content" id="content" class = 'textarea'>{{post['content']}}</textarea>
 	<script>CKEDITOR.replace('content')</script>
-
+	<input type="submit" class="postbtn" value="Edit">
 </form>	
 </div>
 <br>
-<button id = 'post' onclick="post(`{{post['slug']}}`)">Post</button>
+
 </body>
 </html>
 

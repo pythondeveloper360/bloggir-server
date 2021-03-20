@@ -27,13 +27,13 @@ def postview(slug):
         if session["login"] != sql.getAuthorUserName(slug):
                 sql.postview(slug)
         if slug in sql.slugs():
-            return render_template("postview.html", url = f'/post/{slug}',base = "baseadmin",login_user = session['login'],like = sql.check_liked_by_user(session['login'],slug),post=sql.readPostBySlug(slug),login = True ,content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"],comments = sql.getComment(slug).repr())
+            return render_template("postview.html", url = f'post/{slug}',base = "baseadmin",login_user = session['login'],like = sql.check_liked_by_user(session['login'],slug),post=sql.readPostBySlug(slug),login = True ,content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year, page_tittle=sql.readPostBySlug(slug)["tittle"],comments = sql.getComment(slug).repr())
         else:
             abort(404)
     else:
         if slug in sql.slugs():
 
-            return render_template("postview.html", url = f'/post{slug}', base = "base",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year,login  =False, page_tittle=sql.readPostBySlug(slug)["tittle"],comments = sql.getComment(slug).repr())
+            return render_template("postview.html", url = f'post/{slug}', base = "base",post=sql.readPostBySlug(slug), content=Markup(sql.readPostBySlug(slug)['content']), year=datetime.now().year,login  =False, page_tittle=sql.readPostBySlug(slug)["tittle"],comments = sql.getComment(slug).repr())
         else:
             abort(404)
 
@@ -58,11 +58,7 @@ def new_post():
             tagline = request.form.get('tagline')
             content = request.form.get('content')
             name = sql.getNameFromUserName(session['login'])
-            print('tittle = ',tittle)
-            print('slug = ',slug)
-            print('tag = ',tagline)
-            print('cont = ',content)
-            
+    
             sql.insertPost(tittle, tagline, content, slug,
                         date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
             return redirect('/cp')
@@ -95,7 +91,7 @@ def cplogin():
         if sql.authenticateuser(uname, password):
             session['login'] = uname
         else:
-            flash("Username or password does not nbsp match")
+            flash("Username or password does not match")
             return render_template('cplogin.html')
     if 'login' in session and redirect_url != '':
         if r'%2F' in redirect_url:
@@ -121,9 +117,15 @@ def update(slug):
         return redirect("/cplogin")
 
 
-@app.route("/edit/<slug>")
+@app.route("/edit/<slug>",methods = ["POST","GET"])
 def editpost(slug):
     if 'login' in session:
+        if request.method == "POST":
+            tittle = request.form.get('tittle')
+            tagline = request.form.get('tagline')
+            content = request.form.get('content')
+            sql.updatePost(tittle,tagline,content,slug,date = f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}')
+            return redirect('/cp')
         return render_template("edit.html", post=sql.readPostBySlug(slug), tittle=f"Edit {sql.readPostBySlug(slug)['tittle']}")
     else:
         return redirect(f"/cplogin?redirect=edit/{slug}")
@@ -142,14 +144,14 @@ def delete(slug):
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        data = request.get_json()
-        work = sql.signUpUser(data['name'], data['email'], data['uname'],data['pass'],data['about'])
+        work = sql.signUpUser(request.form.get('name'), request.form.get('email'), request.form.get('uname'),request.form.get('pass'),request.form.get('about'))
         if work:
-            print("dadasd")
-            return jsonify({'work':'done'})
+            session["login"] = request.form.get('uname')
+            return redirect('/')
         else:
-            return jsonify({'work':'not'})
-
+            flash("Username is already taken")
+            return render_template("signup.html",tittle = 'SignUp for Bloggir')
+    
     return render_template("signup.html", tittle='SignUp for Bloggir')
 
 
