@@ -16,9 +16,9 @@
     }
   
   .onecomment {
-    width : 80%;
+    width : 60%;
     position: relative;
-    left:11%;
+    left:9.5%;
     border-style: solid;
     border-bottom: black;
     margin-top: 10px;
@@ -116,7 +116,7 @@ let login_user = `{{login_user}}`
 <div class="commentsBox">
   {% for comm in comments%}
       <div class="onecomment">
-        <div class='nameAndDate'><b>{{comm['username']}}</b> <small> on {{comm['date']}}</small> </div>
+        <div class='nameAndDate'>{{comm['username']}} <small> on {{comm['date']}}</small> </div>
         <div class='commentText'><blockquote>{{comm['comment']}}</blockquote></div>
       </div>
   {% endfor %}

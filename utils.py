@@ -5,7 +5,7 @@ class JsonStr:
         if self.l:
             for i in self.l:
                 self.arr.append(dict(id=int(i.split(':')[0]), username=i.split(':')[
-                                1], comment=i.split(':')[2], date=i.split(':')[3]))
+                                1], comment=i.split(':')[2], date='-'.join(i.split(':')[3:])))
 
     def __repr__(self):
         return str(self.arr)
@@ -33,7 +33,7 @@ class JsonStr:
         return self.arr
 
     def to_string(self):
-        if self.l or self.l:
+        if self.l or self.arr:
             self.strarr = []
             for i in self.arr:
                 self.strarr.append(
