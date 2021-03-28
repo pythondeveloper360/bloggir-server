@@ -12,23 +12,27 @@
 <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
 
 	<div id = 'newpost'>
-		<form action="/newpost" method="POST">
-			<label for="tittle">Tittle</label>
-				
-			<input type="text" class = 'text' name="tittle" id="tittle">
+		<form action="/newpost" method="POST" enctype = "multipart/form-data">
+			<label for="tittle" class = "label">Tittle</label>
+			<div class="text">	
+			<input type="text"  name="tittle" id="tittle">
+			</div>
+			<label for="slug"class = "label">Slug</label>
+			<div class="text">
+			<input type="slug" name="slug" id="slug">
+			</div>
 			<br>
-			<label for="slug">Slug</label>
+			<label for="tagline"class = "label">Tagline</label>
+			<div class="text">
+			<input type="text" name="tagline" id="tagline">
+			</div>
+			<label for="file"class = "label">Select image</label>
+			<div class="text">
+			<input type="file" id  = 'image' name = 'image' class = 'fileInput'>
+			</div>
 			
-			<input type="slug" name="slug" class = 'text'id="slug">
-			<br>
-			<label for="tagline">Tagline</label>
+			<label for="content" class = 'label' style = "display: block!important;text-align: left!important;">Content</label>
 			
-			<input type="text" name="tagline" class = 'text'id="tagline">
-			<br>
-			<br>
-			<label for="content">Content</label>
-			<br>
-
 			<textarea name="content" id="content" class = 'textarea'></textarea>
 			<script>CKEDITOR.replace("content");</script>
 			<div class = "postdiv">

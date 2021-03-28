@@ -28,8 +28,8 @@ right: 10px;
   width: 100%;
 }
 .text{
-  position: absolute;
-  left: 150px;
+  display: inline-block;
+
 }
 .postdiv{
   padding-left: 90%;
@@ -37,4 +37,13 @@ right: 10px;
 
 .marker{
   background-color: yellow;
+}
+.fileInput{
+  margin: 20px;
+  margin-left: 15px;
+}
+.label{
+  text-align: center;
+  display: inline-block;
+  width: 150px;
 }

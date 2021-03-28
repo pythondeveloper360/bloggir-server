@@ -76,9 +76,15 @@ let login_user = `{{login_user}}`
       <div class="col-lg-8 col-md-10 mx-auto">
         <div class="post-heading">
           <h1>{{post['tittle']}}</h1>
-          <h4>Likes :&nbsp;<span onclick="like(`{{post['slug']}}`)" id="like"><img
-                src="{{url_for('static',filename = 'img/like.png')}}" id="likeimg" width="25"></span> {{post['likes']}}
-          </h4>
+          {% if like %}
+            <h4>Likes :&nbsp;<span onclick="like(`{{post['slug']}}`)" id="like"><img
+                  src="{{url_for('static',filename = 'img/liked.png')}}" id="likeimg" width="25"></span> {{post['likes']}}
+            </h4>
+          {% else %}
+            <h4>Likes :&nbsp;<span onclick="like(`{{post['slug']}}`)" id="like"><img
+              src="{{url_for('static',filename = 'img/like.png')}}" id="likeimg" width="25"></span> {{post['likes']}}
+            </h4>
+          {% endif %}
           <h4>Viewed : {{post['view']}}</h4>
 
           <span class="meta">Posted by

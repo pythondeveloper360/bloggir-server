@@ -58,9 +58,9 @@ def new_post():
             tagline = request.form.get('tagline')
             content = request.form.get('content')
             name = sql.getNameFromUserName(session['login'])
-    
+            image = request.files['image'].read()   
             sql.insertPost(tittle, tagline, content, slug,
-                        date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'])
+                        date=f'{datetime.now().day} - {datetime.now().month} - {datetime.now().year}', author=name, authorusername=session['login'],image = image)
             return redirect('/cp')
         else:
             return render_template('newpost.html')

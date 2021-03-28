@@ -55,18 +55,20 @@ def readAllPosts():
     return array
 
 
-def insertPost(tittle, tagline, content, slug, date, author, authorusername):
+def insertPost(tittle, tagline, content, slug, date, author, authorusername,image):
     try:
-        sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername},{likes},{view}) values (%s,%s,%s,%s,%s,%s,%s,0,1);').format(
+        sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername},{likes},{view},{image}) values (%s,%s,%s,%s,%s,%s,%s,0,1,%s);').format(
             tittle=sql.Identifier("tittle"), tagline=sql.Identifier("tagline"),
             content=sql.Identifier("content"),
             slug=sql.Identifier("slug"), date=sql.Identifier("date"),
             author=sql.Identifier("author"),
             authorusername=sql.Identifier("authorusername"),
-            likes = sql.Identifier("likes"),view = sql.Identifier("view"))
+            likes = sql.Identifier("likes"),view = sql.Identifier("view"),
+            image = sql.Identifier("image"))
+
 
         cursor.execute(sqlquery, (tittle, tagline, content,
-                                slug, date, author, authorusername))
+                                slug, date, author, authorusername,image))
         db.commit()
         return True
     except:
@@ -264,7 +266,7 @@ def get_likes(username):
     sqlquery = sql.SQL('select likes from users where {username} = %s').format(username = sql.Identifier("username"))
     cursor.execute(sqlquery,(username,))
     data = cursor.fetchone()[0]
-    return (list(data) if data else None)
+    return (list(data) if data else [])
 def add_like(username,slug):
     likes = get_likes(username)
     if slug not  in likes:
@@ -288,13 +290,11 @@ def check_liked_by_user(username,slug):
     sqlquery = sql.SQL('select likes from users where {username} = %s').format(username = sql.Identifier("username"))
     cursor.execute(sqlquery,(username,))
     data = cursor.fetchone()
-    try:
-        if slug in data:
-            return True
-        else:
-            return False
-    except:
+    if slug in data[0]:
+        return True
+    else:
         return False
+    
 # def add_comment(slug,username,comment,date):
 #     sqlquery = sql.SQL('select comment from post where {slug} = %s').format(slug = sql.Identifier("slug"))
 #     cursor.execute(sqlquery,(slug,))
@@ -335,3 +335,19 @@ def add_comment(slug,username,commment_text,date):
     cursor.execute(sqlquery,(comments.to_string(),slug))
     db.commit()
     increment_id(slug)
+
+def createImage(slug):
+    sqlquery = sql.SQL('select image from post where {slug} = %s').format(slug = sql.Identifier("slug"))
+    cursor.execute(sqlquery,(slug,))
+    imageData = cursor.fetchone()
+    imageData = imageData[0] if imageData else False
+    if imageData:
+        try:
+            fopen = open(f'./static/blogimages/{slug}.jpeg','xb')
+            fopen.write(imageData)
+            fopen.close()
+        except:
+            return 
+    else:
+        return False
+
