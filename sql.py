@@ -57,7 +57,7 @@ def readAllPosts():
 
 def insertPost(tittle, tagline, content, slug, date, author, authorusername,image):
     try:
-        sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername},{likes},{view},{image}) values (%s,%s,%s,%s,%s,%s,%s,0,1,%s);').format(
+        sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername},{likes},{view},{image},{likes}) values (%s,%s,%s,%s,%s,%s,%s,0,1,%s,[]);').format(
             tittle=sql.Identifier("tittle"), tagline=sql.Identifier("tagline"),
             content=sql.Identifier("content"),
             slug=sql.Identifier("slug"), date=sql.Identifier("date"),
@@ -290,6 +290,7 @@ def check_liked_by_user(username,slug):
     sqlquery = sql.SQL('select likes from users where {username} = %s').format(username = sql.Identifier("username"))
     cursor.execute(sqlquery,(username,))
     data = cursor.fetchone()
+    print(data)
     if slug in data[0]:
         return True
     else:
