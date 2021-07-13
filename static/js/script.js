@@ -104,7 +104,7 @@ let comment = (slug) => {
     if (document.getElementById('comment').value){
     let data = {
         "comment" : document.getElementById('comment').value,
-        "date": `${d.getDate()}:${d.getMonth()}:${d.getFullYear()}`
+        "date": `${d.getDate()}-${d.getMonth()}-${d.getFullYear()}`
     }
     
     let xhr = new XMLHttpRequest()

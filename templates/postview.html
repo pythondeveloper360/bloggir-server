@@ -56,9 +56,11 @@ let login_user = `{{login_user}}`
   like = (slug) => {
     var i = document.getElementById('likeimg').src;
     if (i.search("liked") != -1) {
+      document.getElementById('likes').textContent = parseInt(document.getElementById('likes').textContent)-1
       document.getElementById('likeimg').src = "{{url_for('static',filename = 'img/like.png')}}"
     }
     else {
+      document.getElementById('likes').textContent = parseInt(document.getElementById('likes').textContent)+1
       document.getElementById('likeimg').src = "{{url_for('static',filename = 'img/liked.png')}}"
     }
     var xhr = new XMLHttpRequest();
@@ -78,11 +80,11 @@ let login_user = `{{login_user}}`
           <h1>{{post['tittle']}}</h1>
           {% if like %}
             <h4>Likes :&nbsp;<span onclick="like(`{{post['slug']}}`)" id="like"><img
-                  src="{{url_for('static',filename = 'img/liked.png')}}" id="likeimg" width="25"></span> {{post['likes']}}
+                  src="{{url_for('static',filename = 'img/liked.png')}}" id="likeimg" width="25"></span> <span id = 'likes'>{{post['likes']}}</span>
             </h4>
           {% else %}
             <h4>Likes :&nbsp;<span onclick="like(`{{post['slug']}}`)" id="like"><img
-              src="{{url_for('static',filename = 'img/like.png')}}" id="likeimg" width="25"></span> {{post['likes']}}
+              src="{{url_for('static',filename = 'img/like.png')}}" id="likeimg" width="25"></span> <span id = 'likes'>{{post['likes']}}</span>
             </h4>
           {% endif %}
           <h4>Viewed : {{post['view']}}</h4>

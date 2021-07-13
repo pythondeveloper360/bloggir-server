@@ -1,7 +1,9 @@
-import psycopg2
-from psycopg2 import sql
 import json
 import os
+
+import psycopg2
+from psycopg2 import sql
+
 import utils
 
 db = psycopg2.connect(
@@ -57,7 +59,7 @@ def readAllPosts():
 
 def insertPost(tittle, tagline, content, slug, date, author, authorusername,image):
     try:
-        sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername},{likes},{view},{image},{likes}) values (%s,%s,%s,%s,%s,%s,%s,0,1,%s,[]);').format(
+        sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername},{likes},{view},{image}) values (%s,%s,%s,%s,%s,%s,%s,0,1,%s);').format(
             tittle=sql.Identifier("tittle"), tagline=sql.Identifier("tagline"),
             content=sql.Identifier("content"),
             slug=sql.Identifier("slug"), date=sql.Identifier("date"),
@@ -234,7 +236,11 @@ def changePassword(userName, oldPassword, newPassword):
             return True
     else:
         return False
-def like_blog(slug):
+
+
+
+
+def like_blog(user,slug):
     sqlquery = sql.SQL('select likes from post where {slug} = %s').format(
         slug = sql.Identifier("slug")
     )
@@ -246,8 +252,21 @@ def like_blog(slug):
         slug = sql.Identifier("slug"))
     cursor.execute(sq,(int(likes)+1,slug))
     db.commit()
+    sqlquery = sql.SQL('select likes from users where {username} = %s').format(
+        username = sql.Identifier("username")
+    )
+    cursor.execute(sqlquery,(user,))
+    data = cursor.fetchone()
+    likesByUser = data[0] if data else []
+    likesByUser.append(slug)
+    sqlquery = sql.SQL('update users set {likes} = %s where {username} = %s').format(
+        likes = sql.Identifier("likes"),
+        username = sql.Identifier("username")
+    )
+    cursor.execute(sqlquery,(likesByUser,user))
+    db.commit()
 
-def unlike_blog(slug):
+def unlike_blog(user,slug):
     sqlquery = sql.SQL('select likes from post where {slug} = %s').format(
         slug = sql.Identifier("slug")
     )
@@ -257,52 +276,37 @@ def unlike_blog(slug):
     sq = sql.SQL('update post set {likes} = %s where {slug} = %s').format(
         likes = sql.Identifier("likes"),
         slug = sql.Identifier("slug"))
+    
     cursor.execute(sq,(int(likes)-1,slug))
+    db.commit()
+    sqlquery = sql.SQL('select likes from users where {username} = %s').format(
+        username = sql.Identifier("username")
+    )
+    cursor.execute(sqlquery,(user,))
+    data = cursor.fetchone()
+    likesByUser = data[0] if data else []
+    likesByUser.remove(slug)
+    sqlquery = sql.SQL('update users set {likes} = %s where {username} = %s').format(
+        likes = sql.Identifier("likes"),
+        username = sql.Identifier("username")
+    )
+    cursor.execute(sqlquery,(likesByUser,user))
     db.commit()
 
 
 
-def get_likes(username):
-    sqlquery = sql.SQL('select likes from users where {username} = %s').format(username = sql.Identifier("username"))
-    cursor.execute(sqlquery,(username,))
-    data = cursor.fetchone()[0]
-    return (list(data) if data else [])
-def add_like(username,slug):
-    likes = get_likes(username)
-    if slug not  in likes:
-        likes.append(slug)
-        sqlquery = sql.SQL('update users set {likes} = %s where {username} = %s').format(
-            likes = sql.Identifier("likes"),
-            username = sql.Identifier("username"))
-        cursor.execute(sqlquery,(likes,username))
-        db.commit()
-        like_blog(slug)
-    else:
-        likes.remove(slug)
-        sqlquery = sql.SQL('update users set {likes} = %s where {username} = %s').format(
-            likes = sql.Identifier("likes"),
-            username = sql.Identifier("username"))
-        cursor.execute(sqlquery,(likes,username))
-        db.commit()
-        unlike_blog(slug)
+
+
 
 def check_liked_by_user(username,slug):
     sqlquery = sql.SQL('select likes from users where {username} = %s').format(username = sql.Identifier("username"))
     cursor.execute(sqlquery,(username,))
     data = cursor.fetchone()
-    print(data)
     if slug in data[0]:
         return True
     else:
         return False
     
-# def add_comment(slug,username,comment,date):
-#     sqlquery = sql.SQL('select comment from post where {slug} = %s').format(slug = sql.Identifier("slug"))
-#     cursor.execute(sqlquery,(slug,))
-#     commentdata = cursor.fetchone()[0]
-#     sqlquery = sql.SQL('select comment_no from post where {slug} = %s').format(slug = sql.Identifier("slug"))
-#     cursor.execute(sqlquery,(slug,))
-#     commentno = cursor.fetchone()[0]
     
 def getComment(slug):
     sqlquery = sql.SQL('select comment from post where {slug} = %s').format(slug = sql.Identifier("slug"))

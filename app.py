@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, abort, session, flash, redirect, jsonify, url_for, Markup, jsonify, Response,make_response
-import sql
 import json
 from datetime import datetime
 
+from flask import (Flask, Markup, Response, abort, flash, jsonify,
+                   make_response, redirect, render_template, request, session,
+                   url_for)
+
+import sql
 
 app = Flask(__name__)
 app.secret_key = "hazala"
@@ -192,7 +195,10 @@ def logout():
 def like(slug):
     if "login" in session:
         if slug != "":
-            sql.add_like(session['login'],slug)
+            if sql.check_liked_by_user(session['login'],slug):
+                sql.unlike_blog(session['login'],slug)
+            else:
+                sql.like_blog(session['login'],slug)
             return jsonify({"work":"done"})
     else:
         return jsonify({"work":"not_done"})
