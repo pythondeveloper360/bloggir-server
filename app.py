@@ -209,7 +209,9 @@ def comment_create(slug):
     sql.add_comment(slug,session['login'],data['comment'],data['date'])
     return jsonify({"word":""})
     
-    
+@app.route('/d')
+def d():
+    return{"d":'D'}
 
 
 
