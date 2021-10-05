@@ -1,6 +1,6 @@
 
 import datetime
-
+from threading import Thread
 import psycopg2
 from psycopg2 import sql
 
@@ -155,6 +155,7 @@ def getNameFromUserName(username):
 
 
 def deletePost(slug):
+    
     sqlquery = sql.SQL('DELETE FROM post WHERE {slug} = %s;').format(
         slug=sql.Identifier("slug"))
     cursor.execute(sqlquery, (slug,))
@@ -236,10 +237,14 @@ def changePassword(userName, oldPassword, newPassword):
     else:
         return False
 
-
-
-
-def like_blog(user,slug):
+def likeByUser(likes,slug,username):
+    likes.append(slug)
+    sqlquery = sql.SQL('update users set {likes} = %s where {username} = %s').format(
+        likes = sql.Identifier("likes"),
+        username = sql.Identifier("username")
+    )
+    cursor.execute(sqlquery,(likes,username))
+    db.commit()
     sqlquery = sql.SQL('select likes from post where {slug} = %s').format(
         slug = sql.Identifier("slug")
     )
@@ -251,21 +256,28 @@ def like_blog(user,slug):
         slug = sql.Identifier("slug"))
     cursor.execute(sq,(int(likes)+1,slug))
     db.commit()
+
+def like_blog(user,slug):
     sqlquery = sql.SQL('select likes from users where {username} = %s').format(
         username = sql.Identifier("username")
     )
     cursor.execute(sqlquery,(user,))
     data = cursor.fetchone()
     likesByUser = data[0] if data else []
-    likesByUser.append(slug)
+    if (slug not in likesByUser):
+        worker = Thread(target = likeByUser,args = (likesByUser,slug,user))
+        worker.start()
+        return True
+    else:
+        return False
+def unLikeByUser(likesByUser,slug,user):
+    likesByUser.remove(slug)
     sqlquery = sql.SQL('update users set {likes} = %s where {username} = %s').format(
         likes = sql.Identifier("likes"),
         username = sql.Identifier("username")
     )
     cursor.execute(sqlquery,(likesByUser,user))
     db.commit()
-
-def unlike_blog(user,slug):
     sqlquery = sql.SQL('select likes from post where {slug} = %s').format(
         slug = sql.Identifier("slug")
     )
@@ -278,19 +290,22 @@ def unlike_blog(user,slug):
     
     cursor.execute(sq,(int(likes)-1,slug))
     db.commit()
+        
+
+
+def unlike_blog(user,slug):
     sqlquery = sql.SQL('select likes from users where {username} = %s').format(
         username = sql.Identifier("username")
     )
     cursor.execute(sqlquery,(user,))
     data = cursor.fetchone()
     likesByUser = data[0] if data else []
-    likesByUser.remove(slug)
-    sqlquery = sql.SQL('update users set {likes} = %s where {username} = %s').format(
-        likes = sql.Identifier("likes"),
-        username = sql.Identifier("username")
-    )
-    cursor.execute(sqlquery,(likesByUser,user))
-    db.commit()
+    if (slug in likesByUser):
+        worker = Thread(target = unLikeByUser,args=(likesByUser,slug,user)).start()
+        return True
+    else:
+        return False
+        
 
 
 
@@ -301,11 +316,13 @@ def check_liked_by_user(username,slug):
     sqlquery = sql.SQL('select likes from users where {username} = %s').format(username = sql.Identifier("username"))
     cursor.execute(sqlquery,(username,))
     data = cursor.fetchone()
-    if slug in data[0]:
-        return True
+    if data:
+        if slug in data[0]:
+            return True
+        else:
+            return False
     else:
         return False
-    
     
 def getComment(slug):
     sqlquery = sql.SQL('select comment from post where {slug} = %s').format(slug = sql.Identifier("slug"))

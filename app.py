@@ -200,11 +200,23 @@ def logout():
 def like(slug):
     if "login" in session:
         if slug != "":
-            if sql.check_liked_by_user(session['login'], slug):
-                sql.unlike_blog(session['login'], slug)
+            if (sql.like_blog(session['login'], slug)):
+                return{"work":"done"}
             else:
-                sql.like_blog(session['login'], slug)
-            return jsonify({"work": "done"})
+                return {'work':'not done'}
+
+    else:
+        return jsonify({"work": "not_done"})
+@app.route("/unlike/<slug>", methods=["POST"])
+def unlike(slug):
+    if "login" in session:
+        if slug != "":
+            if (sql.unlike_blog(session['login'], slug)):
+                return{"work":"done"}
+            else:
+                return {"work":"not done"}
+        else:
+            return jsonify({'wrok':'not done'})
     else:
         return jsonify({"work": "not_done"})
 

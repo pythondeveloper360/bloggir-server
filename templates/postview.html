@@ -9,8 +9,6 @@
     textarea{
       width : 50%
     } 
-    .name{
-        }
     .commentText{
       margin-left: 5em;
     }
@@ -53,20 +51,15 @@ let login_user = `{{login_user}}`
 </script>
 <script src="{{url_for('static',filename = 'js/script.js')}}"></script>
 <script>
-  like = (slug) => {
+  likebtn = (slug) => {
     var i = document.getElementById('likeimg').src;
-    if (i.search("liked") != -1) {
-      document.getElementById('likes').textContent = parseInt(document.getElementById('likes').textContent)-1
-      document.getElementById('likeimg').src = "{{url_for('static',filename = 'img/like.png')}}"
+    if (i.search('liked') !== -1){
+      unlike(`{{post['slug']}}`)
+      
     }
-    else {
-      document.getElementById('likes').textContent = parseInt(document.getElementById('likes').textContent)+1
-      document.getElementById('likeimg').src = "{{url_for('static',filename = 'img/liked.png')}}"
+    else{
+      like(`{{post['slug']}}`)
     }
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", `/like/${slug}`, true);
-    xhr.send();
-
   }
 
 </script>
@@ -79,11 +72,11 @@ let login_user = `{{login_user}}`
         <div class="post-heading">
           <h1>{{post['tittle']}}</h1>
           {% if like %}
-            <h4>Likes :&nbsp;<span onclick="like(`{{post['slug']}}`)" id="like"><img
+            <h4>Likes :&nbsp;<span onclick="likebtn(`{{post['slug']}}`)" id="like"><img
                   src="{{url_for('static',filename = 'img/liked.png')}}" id="likeimg" width="25"></span> <span id = 'likes'>{{post['likes']}}</span>
             </h4>
           {% else %}
-            <h4>Likes :&nbsp;<span onclick="like(`{{post['slug']}}`)" id="like"><img
+            <h4>Likes :&nbsp;<span onclick="likebtn(`{{post['slug']}}`)" id="like"><img
               src="{{url_for('static',filename = 'img/like.png')}}" id="likeimg" width="25"></span> <span id = 'likes'>{{post['likes']}}</span>
             </h4>
           {% endif %}
