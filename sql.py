@@ -100,6 +100,7 @@ def slugs():
 def readAllPostsByAuthor(authorusername):
     array = []
     sqlquery = sql.SQL('SELECT {id},{tittle},{tagline},{slug},{date},{author},{authorusername} FROM post where {authorusername} = %s').format(
+        id = sql.Identifier("id"),
         authorusername=sql.Identifier("authorusername"),
         tittle=sql.Identifier("tittle"),
         tagline=sql.Identifier("tagline"),
