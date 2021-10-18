@@ -1,6 +1,7 @@
 
 import datetime
 from threading import Thread
+
 import psycopg2
 from psycopg2 import sql
 
@@ -98,8 +99,13 @@ def slugs():
 
 def readAllPostsByAuthor(authorusername):
     array = []
-    sqlquery = sql.SQL('SELECT id,tittle,tagline,slug,date,author,authorusername FROM post where {authorusername} = %s').format(
-        authorusername=sql.Identifier("authorusername"))
+    sqlquery = sql.SQL('SELECT {id},{tittle},{tagline},{slug},{date},{author},{authorusername} FROM post where {authorusername} = %s').format(
+        authorusername=sql.Identifier("authorusername"),
+        tittle=sql.Identifier("tittle"),
+        tagline=sql.Identifier("tagline"),
+        slug=sql.Identifier("slug"), date=sql.Identifier("date"),
+        author=sql.Identifier("author")
+        )
     cursor.execute(sqlquery, (authorusername,))
     data = cursor.fetchall()
     for i in range(len(data)):
@@ -371,4 +377,5 @@ def createImage(slug):
             return 
     else:
         return False
+
 

@@ -9,7 +9,8 @@ class JsonStr:
 
     def __repr__(self):
         return str(self.arr)
-
+    def __iter__(self):
+        return iter(self.arr)
     def repr(self):
         if self.l or self.arr:
             for i in self.arr:

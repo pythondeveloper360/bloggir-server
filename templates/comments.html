@@ -1,0 +1,43 @@
+
+<style>
+    
+    .commentText{
+      margin-left: 5em;
+    }
+  
+  .onecomment {
+    width : 60%;
+    position: relative;
+    left:9.5%;
+    border-style: solid;
+    border-bottom: black;
+    margin-top: 10px;
+  }
+
+  .commentarea {
+    margin: 10px;
+  }
+
+  
+  .commentsBox{
+    padding:10px;
+  }
+  #comment {
+    margin-left: 10%;
+    margin-right: 80;
+    padding: 10px;
+    width: 70%;
+    font-size: large;
+  }
+
+  
+</style>
+
+{% for comm in comments%}
+      <div class="onecomment">
+        <div class='nameAndDate'>{{comm['username']}} <small> on {{comm['date']}}</small> </div>
+        <div class='commentText'><blockquote>{{comm['comment']}}</blockquote></div>
+      </div>
+{%else%}
+<h2>No comments</h2>
+{% endfor %}

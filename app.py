@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from threading import Thread
 
 from flask import (Flask, Markup, Response, abort, flash, jsonify,
                    make_response, redirect, render_template, request, session,
@@ -9,7 +10,7 @@ import sql
 
 app = Flask(__name__)
 app.secret_key = "hazala"
-
+# TODO need to create  route to read comment of specic post or all comments to author
 
 @app.route("/")
 def home():
@@ -62,8 +63,8 @@ def new_post():
             tagline = request.form.get('tagline')
             content = request.form.get('content')
             image = request.files['image'].read()
-            sql.insertPost(tittle, tagline, content, slug,
-                           authorusername=session['login'], image=image)
+            Thread(target=sql.insertPost, args=(tittle, tagline, content, slug,
+                                                session['login'],image)).start()
             return redirect('/cp')
         else:
             return render_template('newpost.html')
@@ -201,37 +202,46 @@ def like(slug):
     if "login" in session:
         if slug != "":
             if (sql.like_blog(session['login'], slug)):
-                return{"work":"done"}
+                return{"work": "done"}
             else:
-                return {'work':'not done'}
+                return {'work': 'not done'}
 
     else:
         return jsonify({"work": "not_done"})
+
+
 @app.route("/unlike/<slug>", methods=["POST"])
 def unlike(slug):
     if "login" in session:
         if slug != "":
             if (sql.unlike_blog(session['login'], slug)):
-                return{"work":"done"}
+                return{"work": "done"}
             else:
-                return {"work":"not done"}
+                return {"work": "not done"}
         else:
-            return jsonify({'wrok':'not done'})
+            return jsonify({'wrok': 'not done'})
     else:
         return jsonify({"work": "not_done"})
 
 
 @app.route('/comment/<slug>', methods=['POST'])
+# TODO need to add threadig in this route
 def comment_create(slug):
     data = request.get_json()
     sql.add_comment(slug, session['login'], data['comment'], data['date'])
     return jsonify({"word": ""})
 
 
-@app.route('/d')
-def d():
-    return{"d": 'D'}
+# @app.route('/d')
+# def d():
+#     return{"d": 'D'}
 
+@app.route('/readcomments/<slug>')
+def readComments(slug):
+    if "login" in session:
+        return render_template('comments.html',comments = sql.getComment(slug))
+    else:
+        return {"flas":'fdfsdf'}
 
 if __name__ == '__main__':
     app.run(debug=True)
