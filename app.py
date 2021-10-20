@@ -12,6 +12,25 @@ app = Flask(__name__)
 app.secret_key = "hazala"
 # TODO need to create  route to read comment of specic post or all comments to author
 
+
+@app.after_request
+def after_request_func(response):
+    origin = request.headers.get('Origin')
+    if request.method == 'OPTIONS':
+        # TODO i think I need to add content-type header in access-control-allow-headers on post requests
+        response = make_response()
+
+        response.headers.add("Access-Control-Allow-Origin", origin)
+        response.headers.add('Access-Control-Allow-Headers',
+                             'Content-type, username,password,token,client_id,device_name')
+        response.headers.add('Access-Control-Allow-Methods',
+                             'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+    else:
+        pass
+
+    return response
+
+
 @app.route("/")
 def home():
     if "login" in session:
@@ -64,7 +83,7 @@ def new_post():
             content = request.form.get('content')
             image = request.files['image'].read()
             Thread(target=sql.insertPost, args=(tittle, tagline, content, slug,
-                                                session['login'],image)).start()
+                                                session['login'], image)).start()
             return redirect('/cp')
         else:
             return render_template('newpost.html')
@@ -228,20 +247,118 @@ def unlike(slug):
 # TODO need to add threadig in this route
 def comment_create(slug):
     data = request.get_json()
-    sql.add_comment(slug, session['login'], data['comment'], data['date'])
+    Thread(target=sql.add_comment, args=(
+        slug, session['login'], data['comment'], data['date'])).start()
     return jsonify({"word": ""})
 
-
-# @app.route('/d')
-# def d():
-#     return{"d": 'D'}
 
 @app.route('/readcomments/<slug>')
 def readComments(slug):
     if "login" in session:
-        return render_template('comments.html',comments = sql.getComment(slug))
+        return render_template('comments.html', comments=sql.getComment(slug))
     else:
-        return {"flas":'fdfsdf'}
+        return abort(400)
+
+# @Api Portion
+
+
+@app.route('/api/posts', methods=["POST"])
+def api_post():
+    d = request.get_json()
+    if d.get('by'):
+        response = jsonify({"posts": sql.posts(username=d['by'])})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    else:
+        response = jsonify({"posts": sql.posts(username=False)})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
+
+@app.route('/api/post/<slug>')
+def api_postBySlug(slug):
+    response = jsonify({"post": sql.postBySlug(slug)})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+@app.route("/api/loginAuth", methods=["POST"])
+def api_loginAuth():
+
+    hData = request.headers
+    work = sql.authenticateLogin(username=hData.get(
+        'username'), cleint_id=hData.get('client_id'), token=hData.get('token'))
+
+    if work:
+        response = jsonify({"status": "done"})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    else:
+
+        response = jsonify({"status": "unathourized"})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
+
+@app.route('/api/login', methods=['POST'])
+def api_auth():
+    hData = request.headers
+    w = sql.login(
+        username=hData.get('username'), password=hData.get('password'), device_name=hData.get('device_name'))
+    if w:
+        response = jsonify(w)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    else:
+        response = jsonify({"status": "unauthorized"})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
+
+@app.route('/api/logout', methods=['POST'])
+def api_logout():
+    hData = request.headers
+    work = sql.logout(username=hData.get('username'),
+                      client_id=hData.get('client_id'))
+    if work:
+        response = jsonify({'status': "done"})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
+
+@app.route('/api/postFromSlug', methods=["POST"])
+def api_post_from_slug():
+    jData = request.get_json()
+    if jData.get('slug'):
+        work = sql.postBySlug(jData.get('slug'))
+        if work:
+            response = jsonify({"status": "done", "post": work})
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response
+        else:
+            response = jsonify({'status': 'not done'})
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response
+    else:
+        return{'status': 'not done'}
+
+
+@app.route('/api/newPost', methods=["POST"])
+def api_newPost():
+    jData = request.get_json()
+    hData = request.headers
+    if (sql.authenticateLogin(username=hData.get(
+            'username'), cleint_id=hData.get('client_id'), token=hData.get('token'))):
+        work = sql.newPost(tittle=jData.get('tittle'), content=jData.get('content'), slug=jData.get(
+            'slug'), tagline=jData.get('tagline'), authorusername=jData.get('authorusername'))
+        response = jsonify({"status": True} if work else {"status": False})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    else:
+        response = jsonify({"status": 'Falsey'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
 
 if __name__ == '__main__':
     app.run(debug=True)
