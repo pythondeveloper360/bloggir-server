@@ -321,7 +321,7 @@ def api_logout():
 
 
 @app.route('/api/postBySlug', methods=["POST"])
-def api_post_from_slug():
+def api_post_by_slug():
     jData = request.get_json()
     if jData.get('slug'):
         work = sql.postBySlug(jData.get('slug'))
@@ -334,7 +334,9 @@ def api_post_from_slug():
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
     else:
-        return{'status': 'not done'}
+        response = jsonify({'status': 'not done'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
 
 
 @app.route('/api/newPost', methods=["POST"])
