@@ -266,20 +266,14 @@ def readComments(slug):
 def api_post():
     d = request.get_json()
     if d.get('by'):
-        response = jsonify({"posts": sql.posts(username=d['by'])})
+        response = jsonify({"posts": sql.readAllPostsByAuthor(authorusername=d['by'])})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
     else:
-        response = jsonify({"posts": sql.posts(username=False)})
+        response = jsonify({"posts": sql.readAllPosts()})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-
-@app.route('/api/post/<slug>')
-def api_postBySlug(slug):
-    response = jsonify({"post": sql.postBySlug(slug)})
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
 
 
 @app.route("/api/loginAuth", methods=["POST"])
@@ -301,7 +295,7 @@ def api_loginAuth():
 
 
 @app.route('/api/login', methods=['POST'])
-def api_auth():
+def api_login():
     hData = request.headers
     w = sql.login(
         username=hData.get('username'), password=hData.get('password'), device_name=hData.get('device_name'))
@@ -326,7 +320,7 @@ def api_logout():
         return response
 
 
-@app.route('/api/postFromSlug', methods=["POST"])
+@app.route('/api/postBySlug', methods=["POST"])
 def api_post_from_slug():
     jData = request.get_json()
     if jData.get('slug'):

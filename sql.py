@@ -1,4 +1,4 @@
-
+import random
 import datetime
 from threading import Thread
 
@@ -46,10 +46,15 @@ id,tittle,tagline,content,slug,date,author,authorusername
 
 """
 
+def idGenerator(range_=15):
+    alphabet = [*[chr(i) for i in range(97, 123)], *[chr(i)
+                                                     for i in range(65, 91)], *[chr(i) for i in range(48, 58)]]
+    random.shuffle(alphabet)
+    return ''.join(alphabet[:range_])
 
-def readAllPosts():
+def readAllPosts(by = False):
     array = []
-    sqlquery = sql.SQL('SELECT id,tittle,tagline,slug,date,author FROM post')
+    sqlquery = sql.SQL(f'SELECT id,tittle,tagline,slug,date,author FROM post' )
     cursor.execute(sqlquery)
     data = cursor.fetchall()
     # print(data)
@@ -184,7 +189,7 @@ def authenticateuser(user, password):
     if result:
         return user
     else:
-        return None
+        return False
 
 def editprofile(username ,name,about):
     if checkuser(username):
@@ -380,3 +385,36 @@ def createImage(slug):
         return False
 
 
+
+def login(username, password, device_name):
+    if authenticateuser(username, password):
+        token = idGenerator()
+        client_id = idGenerator()
+        sqlquery = sql.SQL('insert into logins ({username},{token},{client_id},{device_name}) values(%s,%s,%s,%s)').format(
+            username=sql.Identifier("username"),
+            token=sql.Identifier("token"),
+            client_id=sql.Identifier("client_id"),
+            device_name=sql.Identifier("device_name")
+        )
+        cursor.execute(sqlquery, (username, token, client_id, device_name))
+        db.commit()
+        return {'username': username, 'token': token, 'client_id': client_id}
+    else:
+        return False
+
+
+def authenticateLogin(username, token, cleint_id):
+    sqlquery = sql.SQL('select * from logins where {username} = %s and {token} = %s and {client_id} = %s').format(
+        username=sql.Identifier("username"),
+        token=sql.Identifier("token"),
+        client_id=sql.Identifier("client_id")
+    )
+    cursor.execute(sqlquery, (username, token, cleint_id))
+    return bool(cursor.fetchall())
+
+
+def logout(username, client_id):
+    sqlquery = sql.SQL('delete from logins where {username} = %s and {client_id} = %s').format(
+        username=sql.Identifier("username"), client_id=sql.Identifier("client_id"))
+    cursor.execute(sqlquery, (username, client_id))
+    db.commit()
