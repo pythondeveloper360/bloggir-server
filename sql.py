@@ -69,14 +69,14 @@ def readAllPosts(by=False):
 def insertPost(tittle, tagline, content, slug, authorusername):
     date = datetime.datetime.now().strftime("%Y-%m-%d")
     name = getNameFromUserName(authorusername)
-    sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername},{likes},{view},{image}) values (%s,%s,%s,%s,%s,%s,%s,0,1,%s);').format(
+    sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername},{likes},{view}) values (%s,%s,%s,%s,%s,%s,%s,0,1,%s);').format(
         tittle=sql.Identifier("tittle"), tagline=sql.Identifier("tagline"),
         content=sql.Identifier("content"),
         slug=sql.Identifier("slug"), date=sql.Identifier("date"),
         author=sql.Identifier("author"),
         authorusername=sql.Identifier("authorusername"),
         likes=sql.Identifier("likes"), view=sql.Identifier("view")
-        )
+    )
 
     cursor.execute(sqlquery, (tittle, tagline, content,
                               slug, date, name, authorusername))
