@@ -356,7 +356,7 @@ def api_newPost():
         response = jsonify({"status": 'Falsey'})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
-@app.route('/api/getComments')
+@app.route('/api/getComments',methods = ['POST'])
 def api_get_comments():
     jData = request.get_json()
     if jData.get('slug'):
