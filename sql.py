@@ -59,7 +59,7 @@ def readAllPosts(by = False):
     data = cursor.fetchall()
     # print(data)
     for i in range(len(data)):
-        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], slug=data[i][3], date=data[i][4], author=data[i][5]))
+        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], slug=data[i][3], date=data[i][4].strftime('%x'), author=data[i][5]))
     return array
 
 
@@ -87,7 +87,7 @@ def readPostBySlug(slug):
     cursor.execute(sqlquery, (slug,))
     data = cursor.fetchone()
     return dict(id=data[0], tittle=data[1], tagline=data[2], content=data[3],
-                slug=data[4], date=data[5], author=data[6], authorusername=data[7],
+                slug=data[4], date=data[5].strftime('%x'), author=data[6], authorusername=data[7],
                 view = data[8],likes = data[9])
 
 
@@ -115,7 +115,7 @@ def readAllPostsByAuthor(authorusername):
     cursor.execute(sqlquery, (authorusername,))
     data = cursor.fetchall()
     for i in range(len(data)):
-        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], slug=data[i][3], date=data[i][4], author=data[i][5], authorusername=data[i][6]))
+        array.append(dict(id=data[i][0], tittle=data[i][1], tagline=data[i][2], slug=data[i][3], date=data[i][4].strftime('%x'), author=data[i][5], authorusername=data[i][6]))
     return array
 
 def postview(slug):
