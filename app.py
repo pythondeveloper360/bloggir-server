@@ -360,7 +360,7 @@ def api_newPost():
 def api_get_comments():
     args = request.args
     if args.get('slug'):
-        work = sql.getComment(args.get('slug'))
+        work = list(sql.getComment(args.get('slug')))
         response = jsonify({"comments":work})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
