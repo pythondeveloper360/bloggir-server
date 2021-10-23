@@ -347,7 +347,7 @@ def api_newPost():
     hData = request.headers
     if (sql.authenticateLogin(username=hData.get(
             'username'), cleint_id=hData.get('client_id'), token=hData.get('token'))):
-        work = sql.newPost(tittle=jData.get('tittle'), content=jData.get('content'), slug=jData.get(
+        work = sql.insertPost(tittle=jData.get('tittle'), content=jData.get('content'), slug=jData.get(
             'slug'), tagline=jData.get('tagline'), authorusername=jData.get('authorusername'))
         response = jsonify({"status": True} if work else {"status": False})
         response.headers.add('Access-Control-Allow-Origin', '*')
