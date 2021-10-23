@@ -330,10 +330,12 @@ def api_post_by_slug():
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
         else:
+            print('second else')
             response = jsonify({'status': 'not done'})
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
     else:
+        print('last else')
         response = jsonify({'status': 'not done'})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
