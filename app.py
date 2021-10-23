@@ -324,7 +324,7 @@ def api_logout():
 def api_post_by_slug():
     jData = request.get_json()
     if jData.get('slug'):
-        work = sql.postBySlug(jData.get('slug'))
+        work = sql.readPostBySlug(jData.get('slug'))
         if work:
             response = jsonify({"status": "done", "post": work})
             response.headers.add('Access-Control-Allow-Origin', '*')
