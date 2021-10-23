@@ -1,5 +1,5 @@
-import random
 import datetime
+import random
 from threading import Thread
 
 import psycopg2
