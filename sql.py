@@ -66,7 +66,7 @@ def readAllPosts(by=False):
     return array
 
 
-def insertPost(tittle, tagline, content, slug, authorusername, image = False):
+def insertPost(tittle, tagline, content, slug, authorusername):
     date = datetime.datetime.now().strftime("%Y-%m-%d")
     name = getNameFromUserName(authorusername)
     sqlquery = sql.SQL('INSERT INTO post ({tittle},{tagline},{content},{slug},{date},{author},{authorusername},{likes},{view},{image}) values (%s,%s,%s,%s,%s,%s,%s,0,1,%s);').format(
@@ -75,11 +75,11 @@ def insertPost(tittle, tagline, content, slug, authorusername, image = False):
         slug=sql.Identifier("slug"), date=sql.Identifier("date"),
         author=sql.Identifier("author"),
         authorusername=sql.Identifier("authorusername"),
-        likes=sql.Identifier("likes"), view=sql.Identifier("view"),
-        image=sql.Identifier("image"))
+        likes=sql.Identifier("likes"), view=sql.Identifier("view")
+        )
 
     cursor.execute(sqlquery, (tittle, tagline, content,
-                              slug, date, name, authorusername, image))
+                              slug, date, name, authorusername))
     db.commit()
     return True
 
