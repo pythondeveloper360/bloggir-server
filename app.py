@@ -81,7 +81,6 @@ def new_post():
             slug = request.form.get('slug')
             tagline = request.form.get('tagline')
             content = request.form.get('content')
-            image = request.files['image'].read()
             Thread(target=sql.insertPost, args=(tittle, tagline, content, slug,
                                                 session['login'])).start()
             return redirect('/cp')
