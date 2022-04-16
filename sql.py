@@ -337,8 +337,9 @@ def check_liked_by_user(username, slug):
     cursor.execute(sqlquery, (username,))
     data = cursor.fetchone()
     if data:
-        if slug in data[0]:
-            return True
+        if data[0]:
+            if slug in data[0]:
+                return True
         else:
             return False
     else:
